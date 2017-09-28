@@ -1,5 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, HostListener } from '@angular/core';
-import { Game, CANVAS, ScaleManager, Physics, Point, Sprite } from 'phaser-ce';
+import { Http } from '@angular/http';
+import { Engine, Render, World, Bodies, Composites, IRendererOptions,
+  Mouse, MouseConstraint, Vertices, Common, Body } from 'matter-js';
+import { parseString } from 'xml2js';
+
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
 
 type BlockType =
     'arrow'
@@ -10,7 +16,6 @@ type BlockType =
   | 'rightZag'
   | 'square';
 
-
 @Component({
   selector: 'dp-game',
   templateUrl: './game.component.html',
@@ -20,154 +25,89 @@ export class GameComponent implements OnInit {
 
   @Input('width') canvasWidth: number = 100;
   @Input('height') canvasHeight: number = 100;
-  @ViewChild('gameCanvas') canvasRef: ElementRef;
+  @ViewChild('game') element: ElementRef;
 
-  private game: Game;
-  private availableBlockTypes: BlockType[] = [
-    'arrow',
-    'leftHook',
-    'leftZag',
-    'line',
-    'rightHook',
-    'rightZag',
-    'square'
-  ];
-  private currentSprite?: Sprite;
+  private world: World;
+  private blockVertices = {
+    'arrow': '',
+    'leftHook': '',
+    'leftZag': '',
+    'line': '',
+    'rightHook': '',
+    'rightZag': '',
+    'square' : '',
+  };
 
-  // Keyboard down listener
-  @HostListener('window:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (!this.currentSprite) { return }
-    switch (event.code) {
-      case 'ArrowLeft':
-        this.currentSprite.body.velocity.x = -100;
-        break;
-      case 'ArrowRight':
-        this.currentSprite.body.velocity.x = 100;
-        break;
-      case 'ArrowDown':
-        this.currentSprite.body.velocity.y = 1000;
-        break;
-      case 'ArrowUp':
-        this.currentSprite.body.rotation += 90 * Math.PI / 180;
-        break;
-      default: break;
-    }
-  }
-
-  // Keyboard up listener
-  @HostListener('window:keyup', ['$event'])
-  onKeyUp(event: KeyboardEvent) {
-    if (!this.currentSprite) { return }
-    this.currentSprite.body.velocity.x = 0;
-    this.currentSprite.body.velocity.y = 100;
-  }
-
-  constructor() { }
+  constructor(private http: Http) { }
 
   ngOnInit() {
-    this.game = new Game({
-      antialias: true,
-      enableDebug: true,
+    const engine = Engine.create({
+      timescale: 1.0
+    });
+    const options: IRendererOptions = {
       width: this.canvasWidth,
       height: this.canvasHeight,
-      resolution: 1,
-      scaleMode: ScaleManager.NO_SCALE,
-      transparent: false,
-      renderer: CANVAS,
-      state: {
-        preload: () => {
-          this.game.load.baseURL = 'http://localhost:4200';
-          this.game.load.crossOrigin = 'anonymous';
-          this.game.load.image('arrow', `/assets/blocks/arrow.png`);
-          this.game.load.image('leftHook', `/assets/blocks/leftHook.png`);
-          this.game.load.image('leftZag', `/assets/blocks/leftZag.png`);
-          this.game.load.image('line', `/assets/blocks/line.png`);
-          this.game.load.image('rightHook', `/assets/blocks/rightHook.png`);
-          this.game.load.image('rightZag', `/assets/blocks/rightZag.png`);
-          this.game.load.image('square', `/assets/blocks/square.png`);
-          // this.game.load.onFileComplete.add((progress, cacheKey, success, totalLoaded, totalFiles) => {
-          //   const image = this.game.add.image(this.canvasWidth / 2, 0, cacheKey);
-          //   image.scale.set(0.5);
-          // });
-        },
-
-        create: () => {
-          this.game.physics.startSystem(Physics.ARCADE);
-          this.game.stage.backgroundColor = '#cecece';
-        },
-
-        update: () => {
-          const sprite = this.currentSprite;
-          if (sprite) {
-            if (sprite.body.blocked.up && this.game.stage.children.length > 3) {
-              console.log('touching top');
-              return;
-            }
-            if (sprite.body.blocked.down) {
-              this.generateNewBlock();
-            } else {
-              for (let s of this.game.stage.children) {
-                if (s == sprite) { return }
-                if (this.game.physics.arcade.collide(sprite, s)) {
-                  this.generateNewBlock();
-                  break;
-                }
-              }
-            }
-            // if (maySpawn) {
-            //   this.generateNewBlock();
-            //   return;
-            // }
-          } else {
-            this.generateNewBlock();
-          }
-        },
-
-        render: () => {
-          // this.game.debug.bodyInfo(this.currentSprite, 16, 24);
-        },
-
-        shutdown: () => {}
-      }
-
+      hasBounds: false,
+      wireframes: false,
+      background: '#1A54FE',
+      showAngleIndicator: true,
+      showCollisions: true,
+    }
+    const render = Render.create({
+      element: this.element.nativeElement,
+      engine, options
     });
-  }
 
-  private generateNewBlock() {
+    Engine.run(engine);
+    Render.run(render);
 
-    // stop the previous
-    if (this.currentSprite) {
-      this.currentSprite.body.velocity.x = 0;
-      this.currentSprite.body.velocity.y = 0;
-      this.currentSprite.body.immovable = true;
+    this.world = engine.world;
+
+    // Load blocks from svg files
+    for (let key in this.blockVertices) {
+      this.http.get(`assets/blocks/${key}.svg`)
+        .subscribe(result => parseString(result.text(), { trim: true }, (err, result) => {
+          const type: BlockType = result.svg.g[0].g[0]['$'].id;
+          const path = result.svg.g[0].g[0].polygon[0]['$'].points;
+          this.blockVertices[key] = Vertices.fromPath(path);
+        }));
     }
 
-    const newSprite = this.spawnBlock();
-
-    newSprite.body.velocity.x = 0;
-    newSprite.body.velocity.y = 100;
-    this.game.stage.addChild(newSprite);
-    this.currentSprite = newSprite;
+    // Create walls
+    World.add(this.world, [
+      // walls
+      Bodies.rectangle(this.canvasWidth/2, 0, this.canvasWidth, 2, { isStatic: true }),
+      Bodies.rectangle(this.canvasWidth, this.canvasHeight/2, 2, this.canvasHeight, { isStatic: true }),
+      Bodies.rectangle(this.canvasWidth/2, this.canvasHeight, this.canvasWidth, 2, { isStatic: true }),
+      Bodies.rectangle(0, this.canvasHeight/2, 2, this.canvasHeight, { isStatic: true })
+    ]);
   }
 
+  public spawnRandomBlock() {
+    World.add(this.world, [this.getRandomBlock()]);
+  }
 
-  private spawnBlock(): Sprite {
-
-    const randomIndex = Math.floor(Math.random() * this.availableBlockTypes.length);
-    const cacheKey = this.availableBlockTypes[randomIndex];
-    const sprite = this.game.add.sprite(this.canvasWidth / 2, 100, cacheKey);
-
-    this.game.physics.enable(sprite, Physics.ARCADE);
-
-    sprite.anchor.set(0.5);
-    sprite.scale.set(0.5);
-    sprite.body.allowRotation = true;
-
-    sprite.body.collideWorldBounds = true;
-    sprite.body.bounce.setTo(0, 0);
-
-    return sprite;
+  private getRandomBlock() {
+    var randomKey;
+    var count = 0;
+    for (var prop in this.blockVertices) {
+      if (Math.random() < 1/++count) {
+        randomKey = prop;
+      }
+    }
+    console.log(this.blockVertices[randomKey]);
+    const body = Bodies.fromVertices(this.canvasWidth/2, this.canvasHeight/2, this.blockVertices[randomKey], {
+      frictionAir: 0.01,
+      // render: {
+      //   sprite: {
+      //     texture: `assets/blocks/${type}.png`
+      //   }
+      // }
+    }, true);
+    body.position.x = this.canvasWidth / 2;
+    body.position.y = this.canvasHeight / 2;
+    Body.scale(body, 0.5, 0.5, []);
+    return body;
   }
 
 }
