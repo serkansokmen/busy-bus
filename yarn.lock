@@ -3725,6 +3725,12 @@ p-map@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/p-map/-/p-map-1.2.0.tgz#e4e94f311eabbc8633a1e79908165fca26241b6b"
 
+p2@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/p2/-/p2-0.7.1.tgz#25f2474d9bc3a6d3140a1da26a67c9e118ac9543"
+  dependencies:
+    poly-decomp "0.1.1"
+
 pako@~0.2.0:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/pako/-/pako-0.2.9.tgz#f3f7522f4ef782348da8161bad9ecfd51bf83a75"
@@ -3856,9 +3862,9 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
 
-phaser@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/phaser/-/phaser-2.6.2.tgz#eb39121725a2149c49f46b5d144318c22bc09249"
+phaser-ce@^2.8.8:
+  version "2.8.8"
+  resolved "https://registry.yarnpkg.com/phaser-ce/-/phaser-ce-2.8.8.tgz#2c37bed2f1ce2cd82382353e2b327bd03568eeda"
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
@@ -3894,6 +3900,10 @@ pixi.js@^4.5.6:
     pixi-gl-core "^1.0.3"
     remove-array-items "^1.0.0"
     resource-loader "^2.0.9"
+
+poly-decomp@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/poly-decomp/-/poly-decomp-0.1.1.tgz#9f68c4fa558663791c9ba4c2df7283f3096c23c9"
 
 portfinder@^1.0.9, portfinder@~1.0.12:
   version "1.0.13"
