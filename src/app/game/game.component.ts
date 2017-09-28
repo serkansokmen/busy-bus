@@ -17,7 +17,7 @@ type BlockType =
   | 'square';
 
 @Component({
-  selector: 'dp-game',
+  selector: 'bb-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
