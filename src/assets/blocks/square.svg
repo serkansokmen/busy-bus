@@ -3,10 +3,15 @@
     <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
     <title>square</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <pattern id="pattern-1" patternUnits="objectBoundingBox" x="0%" width="100%" height="100%">
+            <use xlink:href="#image-2" transform="scale(2.66666667,2.66666667)"></use>
+        </pattern>
+        <image id="image-2" width="48" height="48" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAALNJREFUaAXtmEEKwzAMBOP+yf9/gB/V0uMexZBtA5ObwJLiGQuM1977fQ2+c84aLL/urv+a/Mw/rnUDv7aiAQ1AAh4hCBCnawAjhAUeb2B0r/nCuvtuM63/eANuAM4gTtcARggLaAACxOkawAhhAQ1AgDh9Te8evgth5lnAGUge/UgDfebZUQPJox9poM88O2ogefQj34X6zLOjM5A8+pEG+syzowaSRz/SQJ95dtRA8uhHHxtJG5lrDDU9AAAAAElFTkSuQmCC"></image>
+    </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="square" fill="#B8E986">
-            <polygon id="Combined-Shape" points="0 0 128 0 128 128 0 128"></polygon>
+        <g id="square" fill="url(#pattern-1)">
+            <polygon id="square-a" points="0 0 64 0 128 0 128 64 128 128 64 128 0 128 0 64"></polygon>
         </g>
     </g>
 </svg>
