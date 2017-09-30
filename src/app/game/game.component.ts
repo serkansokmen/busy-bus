@@ -5,7 +5,8 @@ type BlockType =
     'arrow'
   | 'leftHook'
   | 'leftZag'
-  | 'line'
+  | 'line1'
+  | 'line2'
   | 'rightHook'
   | 'rightZag'
   | 'square';
@@ -26,7 +27,8 @@ export class GameComponent implements OnInit {
     'arrow',
     'leftHook',
     'leftZag',
-    'line',
+    'line1',
+    'line2',
     'rightHook',
     'rightZag',
     'square'
@@ -48,7 +50,7 @@ export class GameComponent implements OnInit {
         this.currentSprite.body.velocity.y = 1000;
         break;
       case 'ArrowUp':
-        this.currentSprite.body.rotation += 90 * Math.PI / 180;
+        this.currentSprite.body.rotation -= 90 * Math.PI / 180;
         break;
       case 'Space':
         this.generateNewBlock();
@@ -69,36 +71,32 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.game = new Game({
-      antialias: true,
-      enableDebug: true,
+      antialias: false,
+      enableDebug: false,
       width: this.canvasWidth,
       height: this.canvasHeight,
       resolution: 1,
       scaleMode: ScaleManager.NO_SCALE,
-      transparent: false,
+      transparent: true,
       renderer: CANVAS,
       state: {
         preload: () => {
           this.game.load.baseURL = 'http://localhost:4200';
           this.game.load.crossOrigin = 'anonymous';
-          this.game.load.image('arrow', `/assets/blocks/arrow.png`);
-          this.game.load.image('leftHook', `/assets/blocks/leftHook.png`);
-          this.game.load.image('leftZag', `/assets/blocks/leftZag.png`);
-          this.game.load.image('line', `/assets/blocks/line.png`);
-          this.game.load.image('rightHook', `/assets/blocks/rightHook.png`);
-          this.game.load.image('rightZag', `/assets/blocks/rightZag.png`);
-          this.game.load.image('square', `/assets/blocks/square.png`);
-          // this.game.load.onFileComplete.add((progress, cacheKey, success, totalLoaded, totalFiles) => {
-          //   const image = this.game.add.image(this.canvasWidth / 2, 0, cacheKey);
-          //   image.scale.set(0.5);
-          // });
+          this.game.load.image('arrow', `/assets/img/arrow.svg`);
+          this.game.load.image('leftHook', `/assets/img/leftHook.svg`);
+          this.game.load.image('leftZag', `/assets/img/leftZag.svg`);
+          this.game.load.image('line1', `/assets/img/line1.svg`);
+          this.game.load.image('line2', `/assets/img/line2.svg`);
+          this.game.load.image('rightHook', `/assets/img/rightHook.svg`);
+          this.game.load.image('rightZag', `/assets/img/rightZag.svg`);
+          this.game.load.image('square', `/assets/img/square.svg`);
         },
 
         create: () => {
-          this.game.physics.startSystem(Physics.P2JS);
-          this.game.physics.p2.restitution = 1.0;
-          this.game.physics.p2.gravity.y = 10;
-          this.game.stage.backgroundColor = '#0ca5e6';
+          this.game.physics.startSystem(Physics.ARCADE);
+          // this.game.physics.p2.restitution = 0.0;
+          // this.game.physics.arcade.gravity.y = 100;
         },
 
         update: () => {
@@ -111,13 +109,13 @@ export class GameComponent implements OnInit {
             // if (sprite.body.blocked.down) {
             //   this.generateNewBlock();
             // } else {
-            //   for (let s of this.game.stage.children) {
-            //     if (s == sprite) { return }
-            //     if (this.game.physics.arcade.collide(sprite, s)) {
-            //       this.generateNewBlock();
-            //       break;
-            //     }
-            //   }
+            for (let s of this.game.stage.children) {
+              if (s == sprite) { return }
+              if (this.game.physics.arcade.collide(sprite, s)) {
+                this.generateNewBlock();
+                break;
+              }
+            }
             // }
             // if (maySpawn) {
             //   this.generateNewBlock();
@@ -129,7 +127,7 @@ export class GameComponent implements OnInit {
         },
 
         render: () => {
-          this.game.debug.bodyInfo(this.currentSprite, 16, 24);
+          // this.game.debug.bodyInfo(this.currentSprite, 16, 24);
         },
 
         shutdown: () => {}
@@ -146,8 +144,8 @@ export class GameComponent implements OnInit {
       this.currentSprite.body.velocity.y = 0;
       this.currentSprite.body.immovable = true;
     }
-    const x = Math.random() * this.canvasWidth;
-    const y = Math.random() * this.canvasHeight;
+    const x = this.canvasWidth / 2;
+    const y = 20;
     const newSprite = this.spawnBlock(x, y);
 
     this.game.stage.addChild(newSprite);
@@ -160,18 +158,18 @@ export class GameComponent implements OnInit {
     const randomIndex = Math.floor(Math.random() * this.availableBlockTypes.length);
     const cacheKey = this.availableBlockTypes[randomIndex];
     const sprite = this.game.add.sprite(x, y, cacheKey);
+    sprite.scale.set(0.5);
 
-    this.game.physics.p2.enable(sprite);
+    this.game.physics.arcade.enable(sprite);
 
     // sprite.anchor.set(0.5);
-    // sprite.scale.set(0.5);
-    // sprite.body.allowRotation = false;
-    sprite.body.mass = 1;
-    sprite.body.angularDamping = 0.85;
+    sprite.body.allowRotation = true;
+    // sprite.body.mass = 1;
+    sprite.body.angularDamping = 1.0;
     sprite.body.fixedRotation = false;
-    sprite.body.damping = 0.65;
-    sprite.body.onBeginContact.add(this.blockHit, this);
-
+    // sprite.body.damping = 1.0;
+    // sprite.body.onBeginContact.add(this.blockHit, this);
+    // sprite.body.scale = 0.5;
     sprite.body.collideWorldBounds = true;
 
     return sprite;
