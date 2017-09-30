@@ -147,7 +147,6 @@ export class GameComponent implements OnInit {
     const randomIndex = Math.floor(Math.random() * this.availableBlockTypes.length);
     const cacheKey = this.availableBlockTypes[randomIndex];
     const sprite = this.game.add.sprite(x, y, cacheKey);
-    sprite.scale.set(0.5);
 
     this.game.physics.arcade.enable(sprite);
 
@@ -155,8 +154,7 @@ export class GameComponent implements OnInit {
     // sprite.body.angularDamping = 1.0;
     // sprite.body.fixedRotation = false;
     sprite.body.collideWorldBounds = true;
-    // sprite.body.stopVelocityOnCollide = true;
-    sprite.body.moves = true;
+    sprite.body.stopVelocityOnCollide = true;
 
     return sprite;
   }
