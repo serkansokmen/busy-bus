@@ -34,6 +34,9 @@ export class GameComponent implements OnInit {
     'square'
   ];
   private currentSprite?: Sprite;
+  private blockSize = 96;
+  private speed = 500;
+  private interval: any;
 
   // Keyboard down listener
   @HostListener('window:keydown', ['$event'])
@@ -41,13 +44,13 @@ export class GameComponent implements OnInit {
     if (!this.currentSprite) { return }
     switch (event.code) {
       case 'ArrowLeft':
-        this.currentSprite.body.velocity.x = -100;
+        this.currentSprite.body.position.x -= this.blockSize;
         break;
       case 'ArrowRight':
-        this.currentSprite.body.velocity.x = 100;
+        this.currentSprite.body.position.x += this.blockSize;
         break;
       case 'ArrowDown':
-        this.currentSprite.body.velocity.y = 1000;
+        this.currentSprite.body.position.y += this.blockSize;
         break;
       case 'ArrowUp':
         this.currentSprite.body.rotation -= 90 * Math.PI / 180;
@@ -59,20 +62,12 @@ export class GameComponent implements OnInit {
     }
   }
 
-  // Keyboard up listener
-  @HostListener('window:keyup', ['$event'])
-  onKeyUp(event: KeyboardEvent) {
-    if (!this.currentSprite) { return }
-    this.currentSprite.body.velocity.x = 0;
-    this.currentSprite.body.velocity.y = 100;
-  }
-
   constructor() { }
 
   ngOnInit() {
     this.game = new Game({
       antialias: false,
-      enableDebug: false,
+      enableDebug: true,
       width: this.canvasWidth,
       height: this.canvasHeight,
       resolution: 1,
@@ -95,32 +90,20 @@ export class GameComponent implements OnInit {
 
         create: () => {
           this.game.physics.startSystem(Physics.ARCADE);
-          // this.game.physics.p2.restitution = 0.0;
-          // this.game.physics.arcade.gravity.y = 100;
         },
 
         update: () => {
+
           const sprite = this.currentSprite;
           if (sprite) {
-            // if (sprite.body.blocked.up && this.game.stage.children.length > 3) {
-            //   console.log('touching top');
-            //   return;
-            // }
-            // if (sprite.body.blocked.down) {
-            //   this.generateNewBlock();
-            // } else {
             for (let s of this.game.stage.children) {
               if (s == sprite) { return }
               if (this.game.physics.arcade.collide(sprite, s)) {
-                this.generateNewBlock();
+                // this.generateNewBlock();
+                console.log('touched');
                 break;
               }
             }
-            // }
-            // if (maySpawn) {
-            //   this.generateNewBlock();
-            //   return;
-            // }
           } else {
             this.generateNewBlock();
           }
@@ -140,16 +123,22 @@ export class GameComponent implements OnInit {
 
     // stop the previous
     if (this.currentSprite) {
-      this.currentSprite.body.velocity.x = 0;
-      this.currentSprite.body.velocity.y = 0;
-      this.currentSprite.body.immovable = true;
+
     }
     const x = this.canvasWidth / 2;
     const y = 20;
     const newSprite = this.spawnBlock(x, y);
-
+    newSprite.anchor.set(0.5);
     this.game.stage.addChild(newSprite);
     this.currentSprite = newSprite;
+
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    this.interval = setInterval(() => {
+      // const pos = this.currentSprite.body.position;
+      this.currentSprite.body.position.y += this.blockSize;
+    }, this.speed);
   }
 
 
@@ -162,15 +151,12 @@ export class GameComponent implements OnInit {
 
     this.game.physics.arcade.enable(sprite);
 
-    // sprite.anchor.set(0.5);
-    sprite.body.allowRotation = true;
-    // sprite.body.mass = 1;
-    sprite.body.angularDamping = 1.0;
-    sprite.body.fixedRotation = false;
-    // sprite.body.damping = 1.0;
-    // sprite.body.onBeginContact.add(this.blockHit, this);
-    // sprite.body.scale = 0.5;
+    // sprite.body.allowRotation = true;
+    // sprite.body.angularDamping = 1.0;
+    // sprite.body.fixedRotation = false;
     sprite.body.collideWorldBounds = true;
+    // sprite.body.stopVelocityOnCollide = true;
+    sprite.body.moves = true;
 
     return sprite;
   }
