@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, HostListener } from '@angular/core';
 
+
+interface BlockImage {
+  rotatedImages: HTMLImageElement[];
+};
+
 @Component({
   selector: 'bb-tetris',
   templateUrl: './tetris.component.html',
@@ -7,13 +12,15 @@ import { Component, OnInit, ViewChild, ElementRef, Input, HostListener } from '@
 })
 export class TetrisComponent implements OnInit {
 
-  @Input('columns') columns: number = 24;
+  @Input('columns') columns: number = 16;
   @Input('rows') rows: number = 32;
+  @Input('brickSize') brickSize: number = 20;
 
-  @ViewChild('game') canvas: ElementRef;
-  private context: CanvasRenderingContext2D;
+  @ViewChild('game') gameCanvas: ElementRef;
+
+  private gameCtx: CanvasRenderingContext2D;
   private dropCounter = 0;
-  private dropInterval = 1000;
+  private dropInterval = 500;
   private lastTime = 0;
   private colors = [
     null,
@@ -32,17 +39,38 @@ export class TetrisComponent implements OnInit {
     },
     matrix: null,
     score: 0
+  };
+  // ILJOZST
+  private imageIdentifiers = [
+    null,
+    'line1',
+    'rightHook',
+    'leftHook',
+    'square',
+    'leftZag',
+    'rightZag',
+    'arrow',
+  ];
+
+  private images: HTMLImageElement[] = [null];
+  constructor() {
+    for (let identifier of this.imageIdentifiers) {
+      if (identifier) {
+        let img = document.createElement('img');
+        img.crossOrigin = 'anonymous';
+        img.src = `/assets/img/${identifier}.png`;
+        this.images.push(img);
+      }
+    }
   }
 
-  constructor() { }
-
   ngOnInit() {
-    this.context = this.canvas.nativeElement.getContext('2d');
-    this.context.scale(20, 20);
-    this.context.fillStyle = '#000';
-    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.gameCtx = this.gameCanvas.nativeElement.getContext('2d');
+    // this.gameCtx.scale(this.brickSize, this.brickSize);
+    this.gameCtx.fillStyle = '#fff';
+    this.gameCtx.fillRect(0, 0, this.gameCanvas.nativeElement.width, this.gameCanvas.nativeElement.height);
 
-    this.arena = this.createMatrix(16, 32);
+    this.arena = this.createMatrix(this.columns, this.rows);
 
     this.playerReset();
     this.updateScore();
@@ -75,12 +103,11 @@ export class TetrisComponent implements OnInit {
       this.playerMove(1);
     } else if (event.code === 'ArrowDown') {
       this.playerDrop();
-    } else if (event.code === 'ArrowUp') {
+    } else if (event.code === 'KeyQ') {
       this.playerRotate(-1);
+    } else if (event.code === 'KeyW') {
+      this.playerRotate(1);
     }
-    // else if (event.keyCode === 87) {
-    //   this.playerRotate(1);
-    // }
   }
 
   private arenaSweep() {
@@ -127,45 +154,45 @@ export class TetrisComponent implements OnInit {
   private createPiece(type) {
     if (type === 'I') {
       return [
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
+        [0, [1, 0], 0, 0],
+        [0, [1, 0], 0, 0],
+        [0, [1, 0], 0, 0],
+        [0, [1, 0], 0, 0],
       ];
     } else if (type === 'L') {
       return [
-        [0, 2, 0],
-        [0, 2, 0],
-        [0, 2, 2],
+        [0, [2, 0], 0],
+        [0, [2, 0], 0],
+        [0, [2, 0], [2, 0]],
       ];
     } else if (type === 'J') {
       return [
-        [0, 3, 0],
-        [0, 3, 0],
-        [3, 3, 0],
+        [0,      [3, 0], 0],
+        [0,      [3, 0], 0],
+        [[3, 0], [3, 0], 0],
       ];
     } else if (type === 'O') {
       return [
-        [4, 4],
-        [4, 4],
+        [[4, 0], [4, 0]],
+        [[4, 0], [4, 0]],
       ];
     } else if (type === 'Z') {
       return [
-        [5, 5, 0],
-        [0, 5, 5],
-        [0, 0, 0],
+        [0,      [5, 0], 0],
+        [[5, 0], [5, 0], 0],
+        [[5, 0], 0, 0],
       ];
     } else if (type === 'S') {
       return [
-        [0, 6, 6],
-        [6, 6, 0],
-        [0, 0, 0],
+        [0, [6, 0], 0],
+        [0, [6, 0], [6, 0]],
+        [0, 0,      [6, 0]],
       ];
     } else if (type === 'T') {
       return [
-        [0, 7, 0],
-        [7, 7, 7],
-        [0, 0, 0],
+        [0,      [7, 0], 0],
+        [[7, 0], [7, 0], [7, 0]],
+        [0,      0,      0],
       ];
     }
   }
@@ -174,18 +201,35 @@ export class TetrisComponent implements OnInit {
     matrix.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
-          this.context.fillStyle = this.colors[value];
-          this.context.fillRect(x + offset.x,
+          this.gameCtx.fillStyle = this.colors[value[0]];
+          this.gameCtx.fillRect(x + offset.x,
                                 y + offset.y,
                                 1, 1);
+
+          const sx = (x + offset.x) * this.brickSize;
+          const sy = (y + offset.y) * this.brickSize;
+          const sw = this.brickSize;
+          const sh = this.brickSize;
+          const dx = (x + offset.x) * this.brickSize;
+          const dy = (y + offset.y) * this.brickSize;
+          const dw = this.brickSize;
+          const dh = this.brickSize;
+          const img = this.images[value[0]];
+
+          this.gameCtx.save();
+          const radians = value[1] * Math.PI / 180;
+          this.gameCtx.translate(sx + this.brickSize/2, sy + this.brickSize/2);
+          this.gameCtx.rotate(radians);
+          this.gameCtx.drawImage(img, -this.brickSize/2, -this.brickSize/2, sw, sh);
+          this.gameCtx.restore();
         }
       });
     });
   }
 
   private draw() {
-    this.context.fillStyle = '#000';
-    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.gameCtx.fillStyle = '#ece';
+    this.gameCtx.fillRect(0, 0, this.gameCanvas.nativeElement.width, this.gameCanvas.nativeElement.height);
 
     this.drawMatrix(this.arena, {x: 0, y: 0});
     this.drawMatrix(this.player.matrix, this.player.pos);
@@ -219,6 +263,19 @@ export class TetrisComponent implements OnInit {
     } else {
       matrix.reverse();
     }
+
+    // save rotation info into value's second index
+    matrix.forEach(row => {
+      row.forEach(value => {
+        if (value !== 0) {
+          if (dir > 0) {
+            value[1] += 90;
+          } else {
+            value[1] -= 90;
+          }
+        }
+      });
+    });
   }
 
   private playerDrop() {
