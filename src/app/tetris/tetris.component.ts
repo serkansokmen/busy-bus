@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
 
 
 interface BlockImage {
@@ -8,7 +8,8 @@ interface BlockImage {
 @Component({
   selector: 'bb-tetris',
   templateUrl: './tetris.component.html',
-  styleUrls: ['./tetris.component.css']
+  styleUrls: ['./tetris.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TetrisComponent implements OnInit {
 
@@ -33,7 +34,7 @@ export class TetrisComponent implements OnInit {
     '#3877FF',
   ];
   private arena;
-  private player = {
+  public player = {
     pos: {
       x: 0, y: 0
     },
@@ -73,7 +74,6 @@ export class TetrisComponent implements OnInit {
     this.arena = this.createMatrix(this.columns, this.rows);
 
     this.playerReset();
-    this.updateScore();
     this.update();
   }
 
@@ -89,10 +89,6 @@ export class TetrisComponent implements OnInit {
 
     this.draw();
     requestAnimationFrame(this.update.bind(this));
-  }
-
-  updateScore() {
-    console.log(this.player.score);
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -285,7 +281,6 @@ export class TetrisComponent implements OnInit {
       this.merge(this.arena, this.player);
       this.playerReset();
       this.arenaSweep();
-      this.updateScore();
     }
     this.dropCounter = 0;
   }
@@ -306,7 +301,6 @@ export class TetrisComponent implements OnInit {
     if (this.collide(this.arena, this.player)) {
       this.arena.forEach(row => row.fill(0));
       this.player.score = 0;
-      this.updateScore();
     }
   }
 
