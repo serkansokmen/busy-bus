@@ -59,7 +59,7 @@ export class TetrisComponent implements OnInit {
       if (identifier) {
         let img = document.createElement('img');
         img.crossOrigin = 'anonymous';
-        img.src = `/assets/img/${identifier}.png`;
+        img.src = `/assets/img/${identifier}@2x.png`;
         this.images.push(img);
       }
     }
@@ -202,21 +202,19 @@ export class TetrisComponent implements OnInit {
                                 y + offset.y,
                                 1, 1);
 
-          const sx = (x + offset.x) * this.brickSize;
-          const sy = (y + offset.y) * this.brickSize;
-          const sw = this.brickSize;
-          const sh = this.brickSize;
+          const img = this.images[value[0]];
           const dx = (x + offset.x) * this.brickSize;
           const dy = (y + offset.y) * this.brickSize;
-          const dw = this.brickSize;
-          const dh = this.brickSize;
-          const img = this.images[value[0]];
+          const w = this.brickSize;
+          const h = this.brickSize;
+          const sx = (x + offset.x) * this.brickSize;
+          const sy = (y + offset.y) * this.brickSize;
 
           this.gameCtx.save();
           const radians = value[1] * Math.PI / 180;
           this.gameCtx.translate(sx + this.brickSize/2, sy + this.brickSize/2);
           this.gameCtx.rotate(radians);
-          this.gameCtx.drawImage(img, -this.brickSize/2, -this.brickSize/2, sw, sh);
+          this.gameCtx.drawImage(img, -this.brickSize/2, -this.brickSize/2, w, h);
           this.gameCtx.restore();
         }
       });

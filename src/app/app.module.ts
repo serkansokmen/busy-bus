@@ -3,13 +3,11 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { GameComponent } from './game/game.component';
 import { TetrisComponent } from './tetris/tetris.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GameComponent,
     TetrisComponent
   ],
   imports: [
