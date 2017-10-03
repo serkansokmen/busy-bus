@@ -15,6 +15,8 @@ export class TetrisComponent implements OnInit {
   @ViewChild('game') canvas: ElementRef;
   @ViewChild('currentPiece') currentPiece: ElementRef;
 
+  public blockTypes = 'TJLOSZI';
+
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
   private dropInterval = 1000;
@@ -38,26 +40,31 @@ export class TetrisComponent implements OnInit {
     score: 0
   };
 
-  private images: HTMLImageElement[] = [null];
+  private images: any = {};
   constructor() {
+    // Cache keys
     // ILJOZST
     [
-      null,
-      'lineM',
-      'rightHook',
-      'leftHook',
-      'square',
-      'leftZag',
-      'rightZag',
-      'arrow',
-    ].map(identifier => {
-      if (identifier !== null) {
-        let img = document.createElement('img');
-        img.crossOrigin = 'anonymous';
-        img.src = `/assets/img/${identifier}@2x.png`;
-        this.images.push(img);
-      }
+      ['lineM', 4],
+      ['rightHook', 4],
+      ['leftHook', 4],
+      ['square', 4],
+      ['leftZag', 4],
+      ['rightZag', 4],
+      ['arrow', 4],
+    ].map(item => {
+      this.loadImagePiece(item[0], item[1]);
     });
+  }
+
+  private loadImagePiece(identifier: any, partCount: any) {
+    for (var part = 0; part < partCount; ++part) {
+      let img = document.createElement('img');
+      img.crossOrigin = 'anonymous';
+      const partCacheKey = `${identifier}-p${part+1}`;
+      img.src = `/assets/img/pieces/${partCacheKey}@2x.png`;
+      this.images[partCacheKey] = img;
+    }
   }
 
   ngOnInit() {
@@ -145,48 +152,52 @@ export class TetrisComponent implements OnInit {
     return matrix;
   }
 
-  private createPiece(type) {
+  private createBlockPiece(type, part) {
+    return [type, part];
+  }
+
+  private createBlock(type) {
     if (type === 'I') {
       return [
-        [0, [1, 0], 0, 0],
-        [0, [1, 0], 0, 0],
-        [0, [1, 0], 0, 0],
-        [0, [1, 0], 0, 0],
+        [0, ['lineM-p1', 0], 0, 0],
+        [0, ['lineM-p2', 0], 0, 0],
+        [0, ['lineM-p3', 0], 0, 0],
+        [0, ['lineM-p4', 0], 0, 0],
       ];
     } else if (type === 'L') {
       return [
-        [0, [2, 0], 0],
-        [0, [2, 0], 0],
-        [0, [2, 0], [2, 0]],
+        [0, ['rightHook-p1', 0], 0],
+        [0, ['rightHook-p2', 0], 0],
+        [0, ['rightHook-p3', 0], ['rightHook-p4', 0]],
       ];
     } else if (type === 'J') {
       return [
-        [0,      [3, 0], 0],
-        [0,      [3, 0], 0],
-        [[3, 0], [3, 0], 0],
+        [0,                  ['leftHook-p4', 0], 0],
+        [0,                  ['leftHook-p3', 0], 0],
+        [['leftHook-p1', 0], ['leftHook-p2', 0], 0],
       ];
     } else if (type === 'O') {
       return [
-        [[4, 0], [4, 0]],
-        [[4, 0], [4, 0]],
+        [['square-p1', 0], ['square-p2', 0]],
+        [['square-p3', 0], ['square-p4', 0]],
       ];
     } else if (type === 'Z') {
       return [
-        [0,      [5, 0], 0],
-        [[5, 0], [5, 0], 0],
-        [[5, 0], 0, 0],
+        [0,                 ['leftZag-p1', 0], 0],
+        [['leftZag-p2', 0], ['leftZag-p3', 0], 0],
+        [['leftZag-p4', 0], 0,                 0],
       ];
     } else if (type === 'S') {
       return [
-        [0, [6, 0], 0],
-        [0, [6, 0], [6, 0]],
-        [0, 0,      [6, 0]],
+        [0, ['rightZag-p1', 0], 0],
+        [0, ['rightZag-p2', 0], ['rightZag-p3', 0]],
+        [0, 0,                  ['rightZag-p4', 0]],
       ];
     } else if (type === 'T') {
       return [
-        [0,      [7, 0], 0],
-        [[7, 0], [7, 0], [7, 0]],
-        [0,      0,      0],
+        [0,               ['arrow-p1', 0], 0],
+        [['arrow-p2', 0], ['arrow-p3', 0], ['arrow-p4', 0]],
+        [0,               0,               0],
       ];
     }
   }
@@ -202,20 +213,17 @@ export class TetrisComponent implements OnInit {
 
           const img = this.images[value[0]];
           const radians = value[1] * Math.PI / 180;
-          const sx = x - this.brickSize / 2;
-          const sy = y - this.brickSize / 2;
-          const sw = (matrix.length * this.brickSize) / img.width;
-          const sh = (row.length * this.brickSize) / img.height;
           const dx = (x + offset.x) * this.brickSize;
           const dy = (y + offset.y) * this.brickSize;
-          const dw = this.brickSize;
-          const dh = this.brickSize;
+          // const sx = x - this.brickSize / 2;
+          // const sy = y - this.brickSize / 2;
+          // const sw = (matrix.length * this.brickSize) / img.width;
+          // const sh = (row.length * this.brickSize) / img.height;
 
           this.context.save();
           this.context.translate(dx + this.brickSize/2, dy + this.brickSize/2);
           this.context.rotate(radians);
           this.context.drawImage(img, -this.brickSize/2, -this.brickSize/2, this.brickSize, this.brickSize);
-          // this.context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
           this.context.restore();
         }
       });
@@ -292,8 +300,7 @@ export class TetrisComponent implements OnInit {
   }
 
   private playerReset() {
-    const pieces = 'TJLOSZI';
-    this.player.matrix = this.createPiece(pieces[pieces.length * Math.random() | 0]);
+    this.player.matrix = this.createBlock(this.blockTypes[this.blockTypes.length * Math.random() | 0]);
     this.player.pos.y = 0;
     this.player.pos.x = (this.arena[0].length / 2 | 0) -
              (this.player.matrix[0].length / 2 | 0);
