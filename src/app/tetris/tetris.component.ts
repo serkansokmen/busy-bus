@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
 
-
 interface BlockImage {
-  rotatedImages: HTMLImageElement[];
+  name: string;
+  rotation: number;
 };
 
 @Component({
@@ -17,11 +17,12 @@ export class TetrisComponent implements OnInit {
   @Input('rows') rows: number = 32;
   @Input('brickSize') brickSize: number = 20;
 
-  @ViewChild('game') gameCanvas: ElementRef;
+  @ViewChild('game') canvas: ElementRef;
+  @ViewChild('currentPiece') currentPiece: ElementRef;
 
-  private gameCtx: CanvasRenderingContext2D;
+  private context: CanvasRenderingContext2D;
   private dropCounter = 0;
-  private dropInterval = 500;
+  private dropInterval = 1000;
   private lastTime = 0;
   private colors = [
     null,
@@ -33,7 +34,7 @@ export class TetrisComponent implements OnInit {
     '#FFE138',
     '#3877FF',
   ];
-  private arena;
+  public arena;
   public player = {
     pos: {
       x: 0, y: 0
@@ -41,35 +42,37 @@ export class TetrisComponent implements OnInit {
     matrix: null,
     score: 0
   };
-  // ILJOZST
-  private imageIdentifiers = [
-    null,
-    'line1',
-    'rightHook',
-    'leftHook',
-    'square',
-    'leftZag',
-    'rightZag',
-    'arrow',
-  ];
 
   private images: HTMLImageElement[] = [null];
   constructor() {
-    for (let identifier of this.imageIdentifiers) {
-      if (identifier) {
+    // ILJOZST
+    [
+      null,
+      'lineM',
+      'rightHook',
+      'leftHook',
+      'square',
+      'leftZag',
+      'rightZag',
+      'arrow',
+    ].map(identifier => {
+      if (identifier !== null) {
         let img = document.createElement('img');
         img.crossOrigin = 'anonymous';
         img.src = `/assets/img/${identifier}@2x.png`;
         this.images.push(img);
       }
-    }
+    });
   }
 
   ngOnInit() {
-    this.gameCtx = this.gameCanvas.nativeElement.getContext('2d');
-    // this.gameCtx.scale(this.brickSize, this.brickSize);
-    this.gameCtx.fillStyle = '#fff';
-    this.gameCtx.fillRect(0, 0, this.gameCanvas.nativeElement.width, this.gameCanvas.nativeElement.height);
+    this.context = this.canvas.nativeElement.getContext('2d');
+    this.context.fillStyle = '#fff';
+    this.context.imageSmoothingEnabled = true;
+    this.context.mozImageSmoothingEnabled = true;
+    this.context.webkitImageSmoothingEnabled = true;
+    this.context.mozImageSmoothingEnabled = true;
+    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     this.arena = this.createMatrix(this.columns, this.rows);
 
@@ -197,33 +200,36 @@ export class TetrisComponent implements OnInit {
     matrix.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
-          this.gameCtx.fillStyle = this.colors[value[0]];
-          this.gameCtx.fillRect(x + offset.x,
+          this.context.fillStyle = this.colors[value[0]];
+          this.context.fillRect(x + offset.x,
                                 y + offset.y,
                                 1, 1);
 
           const img = this.images[value[0]];
+          const radians = value[1] * Math.PI / 180;
+          const sx = x - this.brickSize / 2;
+          const sy = y - this.brickSize / 2;
+          const sw = (matrix.length * this.brickSize) / img.width;
+          const sh = (row.length * this.brickSize) / img.height;
           const dx = (x + offset.x) * this.brickSize;
           const dy = (y + offset.y) * this.brickSize;
-          const w = this.brickSize;
-          const h = this.brickSize;
-          const sx = (x + offset.x) * this.brickSize;
-          const sy = (y + offset.y) * this.brickSize;
+          const dw = this.brickSize;
+          const dh = this.brickSize;
 
-          this.gameCtx.save();
-          const radians = value[1] * Math.PI / 180;
-          this.gameCtx.translate(sx + this.brickSize/2, sy + this.brickSize/2);
-          this.gameCtx.rotate(radians);
-          this.gameCtx.drawImage(img, -this.brickSize/2, -this.brickSize/2, w, h);
-          this.gameCtx.restore();
+          this.context.save();
+          this.context.translate(dx + this.brickSize/2, dy + this.brickSize/2);
+          this.context.rotate(radians);
+          this.context.drawImage(img, -this.brickSize/2, -this.brickSize/2, this.brickSize, this.brickSize);
+          // this.context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+          this.context.restore();
         }
       });
     });
   }
 
   private draw() {
-    this.gameCtx.fillStyle = '#ece';
-    this.gameCtx.fillRect(0, 0, this.gameCanvas.nativeElement.width, this.gameCanvas.nativeElement.height);
+    this.context.fillStyle = '#ece';
+    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     this.drawMatrix(this.arena, {x: 0, y: 0});
     this.drawMatrix(this.player.matrix, this.player.pos);

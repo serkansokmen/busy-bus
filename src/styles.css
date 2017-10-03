@@ -1,14 +1,15 @@
 html, body, app-root {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 pre {
-  display: block;
   unicode-bidi: embed;
   font-family: monospace;
-  white-space: pre;
+  font-size: 11px;
   border: solid 1px orange;
   padding: 16px;
   margin:16px;
-  width: 160px;
+  flex: 2 1 auto;
 }

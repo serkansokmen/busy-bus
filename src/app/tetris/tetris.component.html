@@ -1,2 +1,10 @@
 <canvas #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
-<pre><strong>Player:</strong> {{ player | json }}</pre>
+
+<canvas #currentPiece [width]="brickSize" [height]="brickSize"></canvas>
+<div *ngFor="let column of arena">
+  <div *ngFor="let row of column">
+    {{ row | json }}
+  </div>
+</div>
+<!-- <pre><strong>Player:</strong> {{ player | json }}</pre> -->
+
