@@ -184,7 +184,7 @@ export class TetrisComponent implements OnInit {
     } else if (type === 'Z') {
       return [
         [0,                 ['leftZag-p1', 0], 0],
-        [['leftZag-p2', 0], ['leftZag-p3', 0], 0],
+        [['leftZag-p3', 0], ['leftZag-p2', 0], 0],
         [['leftZag-p4', 0], 0,                 0],
       ];
     } else if (type === 'S') {
