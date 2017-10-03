@@ -1,10 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
 
-interface BlockImage {
-  name: string;
-  rotation: number;
-};
-
 @Component({
   selector: 'bb-tetris',
   templateUrl: './tetris.component.html',
