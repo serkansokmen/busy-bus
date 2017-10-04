@@ -168,7 +168,15 @@ export class TetrisComponent implements OnInit {
   }
 
   private createBlock(type) {
-    if (type === 'I') {
+    if (type === 'I1') {
+      return [
+        [0, ['lineF-p1', 0], 0, 0],
+        [0, ['lineF-p2', 0], 0, 0],
+        [0, ['lineF-p3', 0], 0, 0],
+        [0, ['lineF-p4', 0], 0, 0],
+      ];
+    }
+    else if (type === 'I2') {
       return [
         [0, ['lineM-p1', 0], 0, 0],
         [0, ['lineM-p2', 0], 0, 0],
@@ -337,7 +345,7 @@ export class TetrisComponent implements OnInit {
     }
   }
 
-  private pieces = ['I','I','I','I','J','J','J','J','L','L','L','L','O','O','O','O','S','S','S','S','T','T','T','T','Z','Z','Z','Z'];
+  private pieces = ['I1','I1','I1','I1','I2','I2','I2','I2','J','J','J','J','L','L','L','L','O','O','O','O','S','S','S','S','T','T','T','T','Z','Z','Z','Z'];
   private randomPiece() {
     const type = this.pieces.splice(this.random(0, this.pieces.length-1), 1)[0];
     return this.createBlock(type);
