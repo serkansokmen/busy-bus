@@ -323,7 +323,7 @@ export class TetrisComponent implements OnInit {
     this.player.matrix = this.randomPiece();
     this.player.pos.y = 0;
     this.player.pos.x = (this.arena[0].length / 2 | 0) -
-             (this.player.matrix[0].length / 2 | 0);
+             (this.player.matrix ? this.player.matrix[0].length / 2 | 0 : 0);
     if (this.collide(this.arena, this.player)) {
       this.arena.forEach(row => row.fill(0));
       this.player.score = 0;
@@ -347,7 +347,7 @@ export class TetrisComponent implements OnInit {
 
   private pieces = ['I1','I1','I1','I1','I2','I2','I2','I2','J','J','J','J','L','L','L','L','O','O','O','O','S','S','S','S','T','T','T','T','Z','Z','Z','Z'];
   private randomPiece() {
-    const type = this.pieces.splice(this.random(0, this.pieces.length-1), 1)[0];
+    const type = this.pieces[Math.floor(this.random(0, this.pieces.length-1))];
     return this.createBlock(type);
   }
 
