@@ -79,7 +79,7 @@ export class TetrisComponent implements OnInit {
 
   ngOnInit() {
     this.context = this.canvas.nativeElement.getContext('2d');
-    this.context.fillStyle = '#fff';
+    this.context.fillStyle = '#88b6a5';
     this.context.imageSmoothingEnabled = true;
     this.context.mozImageSmoothingEnabled = true;
     this.context.webkitImageSmoothingEnabled = true;
@@ -241,7 +241,7 @@ export class TetrisComponent implements OnInit {
   }
 
   private draw() {
-    this.context.fillStyle = '#7BB7A5';
+    this.context.fillStyle = '#88b6a5';
     this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.context.drawImage(this.backgroundImg, 0, this.brickSize, this.canvas.nativeElement.width, this.canvas.nativeElement.height - this.brickSize);
 
