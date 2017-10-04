@@ -19,7 +19,7 @@ export class TetrisComponent implements OnInit {
 
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
-  private dropInterval = 1000;
+  private dropInterval = 800;
   private lastTime = 0;
   private colors = [
     null,
