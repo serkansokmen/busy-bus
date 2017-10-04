@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input, HostListener, ChangeDe
 @Component({
   selector: 'bb-tetris',
   templateUrl: './tetris.component.html',
-  styleUrls: ['./tetris.component.css'],
+  styleUrls: ['./tetris.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TetrisComponent implements OnInit {
@@ -41,8 +41,12 @@ export class TetrisComponent implements OnInit {
   };
 
   private images: any = {};
+  private backgroundImg: HTMLImageElement;
   constructor() {
-    // Cache keys
+
+    this.loadBackground();
+
+    // Pieces
     // ILJOZST
     [
       ['lineM', 4],
@@ -65,6 +69,12 @@ export class TetrisComponent implements OnInit {
       img.src = `/assets/img/pieces/${partCacheKey}@2x.png`;
       this.images[partCacheKey] = img;
     }
+  }
+
+  private loadBackground() {
+    this.backgroundImg = document.createElement('img');
+    this.backgroundImg.crossOrigin = 'anonymous';
+    this.backgroundImg.src = `/assets/img/oto-bg@2x.png`;
   }
 
   ngOnInit() {
@@ -206,10 +216,10 @@ export class TetrisComponent implements OnInit {
     matrix.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
-          this.context.fillStyle = this.colors[value[0]];
-          this.context.fillRect(x + offset.x,
-                                y + offset.y,
-                                1, 1);
+          // this.context.fillStyle = this.colors[value[0]];
+          // this.context.fillRect(x + offset.x,
+          //                       y + offset.y,
+          //                       1, 1);
 
           const img = this.images[value[0]];
           const radians = value[1] * Math.PI / 180;
@@ -231,8 +241,9 @@ export class TetrisComponent implements OnInit {
   }
 
   private draw() {
-    this.context.fillStyle = 'rgba(255, 255, 255, 255)';
-    this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.context.fillStyle = '#7BB7A5';
+    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.context.drawImage(this.backgroundImg, 0, this.brickSize, this.canvas.nativeElement.width, this.canvas.nativeElement.height - this.brickSize);
 
     this.drawMatrix(this.arena, {x: 0, y: 0});
     this.drawMatrix(this.player.matrix, this.player.pos);

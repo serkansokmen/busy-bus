@@ -1,1 +1,7 @@
-<canvas #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
+<div class="top" [style.height]="brickSize * 2 + 'px'" [style.width]="(columns + 1.55) * brickSize + 'px'"></div>
+<div class="center">
+  <div class="left" [style.height]="rows * brickSize + 'px'"></div>
+  <canvas #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
+  <div class="right" [style.height]="rows * brickSize + 'px'"></div>
+</div>
+<div class="bottom" [style.height]="brickSize + 'px'" [style.width]="(columns + 1.55) * brickSize + 'px'"></div>

@@ -1,12 +1,4 @@
 bb-tetris {
   width: 100%;
   height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background: transparent url('/assets/img/oto%402x.png') center center no-repeat;
-  background-size: 20%;
 }
