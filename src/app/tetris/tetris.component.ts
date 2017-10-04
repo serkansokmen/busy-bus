@@ -47,8 +47,9 @@ export class TetrisComponent implements OnInit {
     this.loadBackground();
 
     // Pieces
-    // ILJOZST
+    // IILJOZST
     [
+      ['lineF', 4],
       ['lineM', 4],
       ['rightHook', 4],
       ['leftHook', 4],
@@ -311,7 +312,7 @@ export class TetrisComponent implements OnInit {
   }
 
   private playerReset() {
-    this.player.matrix = this.createBlock(this.blockTypes[this.blockTypes.length * Math.random() | 0]);
+    this.player.matrix = this.randomPiece();
     this.player.pos.y = 0;
     this.player.pos.x = (this.arena[0].length / 2 | 0) -
              (this.player.matrix[0].length / 2 | 0);
@@ -335,4 +336,12 @@ export class TetrisComponent implements OnInit {
       }
     }
   }
+
+  private pieces = ['I','I','I','I','J','J','J','J','L','L','L','L','O','O','O','O','S','S','S','S','T','T','T','T','Z','Z','Z','Z'];
+  private randomPiece() {
+    const type = this.pieces.splice(this.random(0, this.pieces.length-1), 1)[0];
+    return this.createBlock(type);
+  }
+
+  private random(min, max)      { return (min + (Math.random() * (max - min)));            }
 }
