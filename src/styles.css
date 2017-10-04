@@ -13,3 +13,7 @@ pre {
   margin:16px;
   flex: 2 1 auto;
 }
+
+app-root > div {
+  height: 100%;
+}
