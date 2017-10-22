@@ -5,8 +5,12 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: #f2adb7 url('/assets/img/bg.png') center bottom no-repeat;
+  background: #f2adb7 url('/assets/img/background.png') center bottom no-repeat;
   background-size: contain;
+
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    background-image: url('/assets/img/background@2x.png');
+  }
 
   canvas {
     image-rendering: unset;
