@@ -16,6 +16,17 @@ export class TetrisComponent implements OnInit {
   @ViewChild('currentPiece') currentPiece: ElementRef;
 
   public blockTypes = 'TJLOSZI';
+  // probabilities
+  private pieces = [
+    'I1','I1','I1','I1',
+    'I2','I2','I2','I2',
+    'J','J','J','J',
+    'L','L','L','L',
+    'O','O','O','O',
+    'S','S','S','S',
+    'T','T','T','T',
+    'Z','Z','Z','Z'
+  ];
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
   private dropInterval = 800;
@@ -28,7 +39,6 @@ export class TetrisComponent implements OnInit {
     matrix: null,
     score: 0
   };
-
   private images: any = {};
   private backgroundImg: HTMLImageElement;
   constructor() {
@@ -318,7 +328,6 @@ export class TetrisComponent implements OnInit {
     }
   }
 
-  private pieces = ['I1','I1','I1','I1','I2','I2','I2','I2','J','J','J','J','L','L','L','L','O','O','O','O','S','S','S','S','T','T','T','T','Z','Z','Z','Z'];
   private randomPiece() {
     const type = this.pieces[Math.floor(this.random(0, this.pieces.length-1))];
     return this.createBlock(type);
