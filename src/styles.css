@@ -16,4 +16,6 @@ pre {
 
 app-root > div {
   height: 100%;
+  background-size: contain;
+  background: #f2adb7 url('/assets/img/test-02.png') center bottom no-repeat;
 }

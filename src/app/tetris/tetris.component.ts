@@ -16,7 +16,6 @@ export class TetrisComponent implements OnInit {
   @ViewChild('currentPiece') currentPiece: ElementRef;
 
   public blockTypes = 'TJLOSZI';
-
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
   private dropInterval = 800;
@@ -82,9 +81,9 @@ export class TetrisComponent implements OnInit {
     this.context = this.canvas.nativeElement.getContext('2d');
     this.context.fillStyle = '#88b6a5';
     this.context.imageSmoothingEnabled = true;
-    this.context.mozImageSmoothingEnabled = true;
-    this.context.webkitImageSmoothingEnabled = true;
-    this.context.mozImageSmoothingEnabled = true;
+    // this.context.mozImageSmoothingEnabled = true;
+    // this.context.webkitImageSmoothingEnabled = true;
+    // this.context.mozImageSmoothingEnabled = true;
     this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     this.arena = this.createMatrix(this.columns, this.rows);
