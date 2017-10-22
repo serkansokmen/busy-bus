@@ -64,7 +64,7 @@ export class TetrisComponent implements OnInit {
       let img = document.createElement('img');
       img.crossOrigin = 'anonymous';
       const partCacheKey = `${identifier}-p${part+1}`;
-      img.src = `/assets/img/pieces/${partCacheKey}@2x.png`;
+      img.src = `/assets/img/${partCacheKey}@2x.png`;
       this.images[partCacheKey] = img;
     }
   }
@@ -233,9 +233,7 @@ export class TetrisComponent implements OnInit {
   }
 
   private draw() {
-    // this.context.fillStyle = '#f2adb7';
-    this.context.fillStyle = '#fff';
-    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     this.drawMatrix(this.arena, {x: 0, y: 0});
     this.drawMatrix(this.player.matrix, this.player.pos);
