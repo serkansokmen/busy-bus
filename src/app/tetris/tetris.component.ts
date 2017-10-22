@@ -223,7 +223,8 @@ export class TetrisComponent implements OnInit {
   }
 
   private draw() {
-    this.context.fillStyle = '#f2adb7';
+    // this.context.fillStyle = '#f2adb7';
+    this.context.fillStyle = '#fff';
     this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
     this.drawMatrix(this.arena, {x: 0, y: 0});
