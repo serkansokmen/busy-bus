@@ -1,0 +1,10 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: #f2adb7 url('/assets/img/background.png') center bottom no-repeat;
+  background-size: 100vw;
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    background-image: url('/assets/img/background@2x.png');
+  }
+}

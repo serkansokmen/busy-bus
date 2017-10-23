@@ -1,1 +1,10 @@
-<bb-tetris [columns]="8" [rows]="16" [brickSize]="40"></bb-tetris>
+<bb-welcome
+  [style.display]="isGameMounted ? 'none' : 'flex'"
+  (onStartGame)="isGameMounted = true"></bb-welcome>
+
+<bb-tetris
+  *ngIf="isGameMounted"
+  [columns]="8"
+  [rows]="16"
+  [brickSize]="40"
+  (onGameFinished)="handleGameOverDialog($event)"></bb-tetris>

@@ -1,4 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+  ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'bb-tetris',
@@ -6,7 +16,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input, HostListener, ChangeDe
   styleUrls: ['./tetris.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TetrisComponent implements OnInit {
+export class TetrisComponent implements OnInit, AfterViewInit {
 
   @Input('columns') columns: number = 16;
   @Input('rows') rows: number = 32;
@@ -15,6 +25,9 @@ export class TetrisComponent implements OnInit {
   @ViewChild('game') canvas: ElementRef;
   @ViewChild('currentPiece') currentPiece: ElementRef;
 
+  @Output('onGameFinished') gameFinishedWithScore = new EventEmitter<number>();
+
+  public isRunning = false;
   public blockTypes = 'TJLOSZI';
   // probabilities
   private pieces = [
@@ -42,7 +55,6 @@ export class TetrisComponent implements OnInit {
   private images: any = {};
   private backgroundImg: HTMLImageElement;
   constructor() {
-
     // Pieces
     // IILJOZST
     [
@@ -77,10 +89,17 @@ export class TetrisComponent implements OnInit {
     // this.context.webkitImageSmoothingEnabled = true;
     // this.context.mozImageSmoothingEnabled = true;
     this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  }
 
+  ngAfterViewInit() {
+    this.startNewGame();
+  }
+
+  startNewGame() {
     this.arena = this.createMatrix(this.columns, this.rows);
-
+    this.player.score = 0;
     this.playerReset();
+    this.isRunning = true;
     this.update();
   }
 
@@ -305,9 +324,11 @@ export class TetrisComponent implements OnInit {
     this.player.pos.y = 0;
     this.player.pos.x = (this.arena[0].length / 2 | 0) -
              (this.player.matrix ? this.player.matrix[0].length / 2 | 0 : 0);
+    // check end game
     if (this.collide(this.arena, this.player)) {
       this.arena.forEach(row => row.fill(0));
-      this.player.score = 0;
+      this.isRunning = false;
+      this.gameFinishedWithScore.emit(this.player.score);
     }
   }
 
@@ -331,5 +352,5 @@ export class TetrisComponent implements OnInit {
     return this.createBlock(type);
   }
 
-  private random(min, max)      { return (min + (Math.random() * (max - min)));            }
+  private random(min, max) { return (min + (Math.random() * (max - min))); }
 }
