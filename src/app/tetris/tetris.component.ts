@@ -331,5 +331,5 @@ export class TetrisComponent implements OnInit {
     return this.createBlock(type);
   }
 
-  private random(min, max)      { return (min + (Math.random() * (max - min)));            }
+  private random(min, max) { return (min + (Math.random() * (max - min))); }
 }
