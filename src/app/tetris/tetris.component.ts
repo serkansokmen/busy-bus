@@ -53,6 +53,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private animationFrameRequestId?: any;
   public isRunning = false;
+  public nextPieceType: PieceType;
 
   // probabilities
   private pieces: PieceType[] = [
@@ -77,7 +78,6 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
     matrix: null,
     score: 0
   };
-  private nextPieceType: PieceType;
   private images: any = {};
   private backgroundImg: HTMLImageElement;
   constructor() {
