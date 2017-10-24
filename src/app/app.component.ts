@@ -8,7 +8,7 @@ import { DialogService } from './services/dialog.service';
 })
 export class AppComponent {
 
-  public isGameMounted: boolean = false;
+  public isGameMounted: boolean = true;
 
   constructor(private dialogService: DialogService) {}
 

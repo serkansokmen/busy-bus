@@ -1,3 +1,6 @@
 <div class="container">
-  <canvas #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
+  <canvas class="board" #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
+  <div class="next-piece" *ngIf="nextPieceType">
+    <img [src]="'/assets/img/' + nextPieceType + '@2x.png'" alt="Next piece"/>
+  </div>
 </div>

@@ -15,6 +15,7 @@
   }
 
   .container {
+    position: relative;
     background: transparent url('/assets/img/canvas-bg.png') center center no-repeat;
     background-color: rgba(255,255,255,0.25);
     background-size: cover;
@@ -26,8 +27,24 @@
     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
       background-image: url('/assets/img/canvas-bg@2x.png');
     }
-  }
-  canvas {
-    margin: 0 auto;
+
+    .board {
+
+    }
+    .next-piece {
+      position: absolute;
+      display: block;
+      top: 30px;
+      right: -90px;
+      padding: 15px;
+      background-color: rgba(255,255,255,0.85);
+      box-shadow: 0px 12px 57px -9px rgba(0,0,0,0.27);
+      border-radius: 8px;
+
+      img {
+        max-width: 60px;
+        max-height: 60px;
+      }
+    }
   }
 }
