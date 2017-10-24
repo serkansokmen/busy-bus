@@ -10,6 +10,30 @@ import {
   HostListener,
   ChangeDetectionStrategy } from '@angular/core';
 
+/** Utility function to create a K:V from a list of strings */
+function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
+  return o.reduce((res, key) => {
+    res[key] = key;
+    return res;
+  }, Object.create(null));
+}
+
+/** Create a K:V */
+const PieceType = strEnum([
+  'lineF',
+  'lineM',
+  'leftHook',
+  'rightHook',
+  'square',
+  'rightZag',
+  'leftZag',
+  'arrow'
+]);
+
+/** Create a Type */
+type PieceType = keyof typeof PieceType;
+
+
 @Component({
   selector: 'bb-tetris',
   templateUrl: './tetris.component.html',
@@ -23,49 +47,49 @@ export class TetrisComponent implements OnInit, AfterViewInit {
   @Input('brickSize') brickSize: number = 20;
 
   @ViewChild('game') canvas: ElementRef;
-  @ViewChild('currentPiece') currentPiece: ElementRef;
 
   @Output('onGameFinished') gameFinishedWithScore = new EventEmitter<number>();
 
   public isRunning = false;
-  public blockTypes = 'TJLOSZI';
+
   // probabilities
-  private pieces = [
-    'I1','I1','I1','I1',
-    'I2','I2','I2','I2',
-    'J','J','J','J',
-    'L','L','L','L',
-    'O','O','O','O',
-    'S','S','S','S',
-    'T','T','T','T',
-    'Z','Z','Z','Z'
+  private pieces: PieceType[] = [
+    PieceType.lineF, PieceType.lineF, PieceType.lineF, PieceType.lineF,
+    PieceType.lineM, PieceType.lineM, PieceType.lineM, PieceType.lineM,
+    PieceType.leftHook, PieceType.leftHook, PieceType.leftHook, PieceType.leftHook,
+    PieceType.rightHook, PieceType.rightHook, PieceType.rightHook, PieceType.rightHook,
+    PieceType.square, PieceType.square, PieceType.square, PieceType.square,
+    PieceType.rightZag, PieceType.rightZag, PieceType.rightZag, PieceType.rightZag,
+    PieceType.leftZag, PieceType.leftZag, PieceType.leftZag, PieceType.leftZag,
+    PieceType.arrow, PieceType.arrow, PieceType.arrow, PieceType.arrow,
   ];
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
   private dropInterval = 800;
   private lastTime = 0;
-  public arena;
-  public player = {
+  private arena;
+  private player = {
     pos: {
       x: 0, y: 0
     },
     matrix: null,
     score: 0
   };
+  private nextPieceType: PieceType;
   private images: any = {};
   private backgroundImg: HTMLImageElement;
   constructor() {
     // Pieces
     // IILJOZST
     [
-      ['lineF', 4],
-      ['lineM', 4],
-      ['rightHook', 4],
-      ['leftHook', 4],
-      ['square', 4],
-      ['leftZag', 4],
-      ['rightZag', 4],
-      ['arrow', 4],
+      [PieceType.lineF, 4],
+      [PieceType.lineM, 4],
+      [PieceType.rightHook, 4],
+      [PieceType.leftHook, 4],
+      [PieceType.square, 4],
+      [PieceType.leftZag, 4],
+      [PieceType.rightZag, 4],
+      [PieceType.arrow, 4],
     ].map(item => {
       this.loadImagePiece(item[0], item[1]);
     });
@@ -98,6 +122,7 @@ export class TetrisComponent implements OnInit, AfterViewInit {
   startNewGame() {
     this.arena = this.createMatrix(this.columns, this.rows);
     this.player.score = 0;
+    this.nextPieceType = this.randomPieceType();
     this.playerReset();
     this.isRunning = true;
     this.update();
@@ -177,8 +202,8 @@ export class TetrisComponent implements OnInit, AfterViewInit {
     return [type, part];
   }
 
-  private createBlock(type) {
-    if (type === 'I1') {
+  private getBlock(type: PieceType) {
+    if (type === PieceType.lineF) {
       return [
         [0, ['lineF-p1', 0], 0, 0],
         [0, ['lineF-p2', 0], 0, 0],
@@ -186,43 +211,43 @@ export class TetrisComponent implements OnInit, AfterViewInit {
         [0, ['lineF-p4', 0], 0, 0],
       ];
     }
-    else if (type === 'I2') {
+    else if (type === PieceType.lineM) {
       return [
         [0, ['lineM-p1', 0], 0, 0],
         [0, ['lineM-p2', 0], 0, 0],
         [0, ['lineM-p3', 0], 0, 0],
         [0, ['lineM-p4', 0], 0, 0],
       ];
-    } else if (type === 'L') {
+    } else if (type === PieceType.rightHook) {
       return [
         [0, ['rightHook-p1', 0], 0],
         [0, ['rightHook-p2', 0], 0],
         [0, ['rightHook-p3', 0], ['rightHook-p4', 0]],
       ];
-    } else if (type === 'J') {
+    } else if (type === PieceType.leftHook) {
       return [
         [0,                  ['leftHook-p4', 0], 0],
         [0,                  ['leftHook-p3', 0], 0],
         [['leftHook-p1', 0], ['leftHook-p2', 0], 0],
       ];
-    } else if (type === 'O') {
+    } else if (type === PieceType.square) {
       return [
         [['square-p1', 0], ['square-p2', 0]],
         [['square-p3', 0], ['square-p4', 0]],
       ];
-    } else if (type === 'Z') {
+    } else if (type === PieceType.leftZag) {
       return [
         [0,                 ['leftZag-p1', 0], 0],
         [['leftZag-p3', 0], ['leftZag-p2', 0], 0],
         [['leftZag-p4', 0], 0,                 0],
       ];
-    } else if (type === 'S') {
+    } else if (type === PieceType.rightZag) {
       return [
         [0, ['rightZag-p1', 0], 0],
         [0, ['rightZag-p2', 0], ['rightZag-p3', 0]],
         [0, 0,                  ['rightZag-p4', 0]],
       ];
-    } else if (type === 'T') {
+    } else if (type === PieceType.arrow) {
       return [
         [0,               ['arrow-p1', 0], 0],
         [['arrow-p2', 0], ['arrow-p3', 0], ['arrow-p4', 0]],
@@ -231,7 +256,7 @@ export class TetrisComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private drawMatrix(matrix, offset) {
+  private drawMatrix(ctx, matrix, offset) {
     matrix.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value !== 0) {
@@ -241,11 +266,11 @@ export class TetrisComponent implements OnInit, AfterViewInit {
           const dx = (x + offset.x) * this.brickSize;
           const dy = (y + offset.y) * this.brickSize;
 
-          this.context.save();
-          this.context.translate(dx + this.brickSize/2, dy + this.brickSize/2);
-          this.context.rotate(radians);
-          this.context.drawImage(img, -this.brickSize/2, -this.brickSize/2, this.brickSize, this.brickSize);
-          this.context.restore();
+          ctx.save();
+          ctx.translate(dx + this.brickSize/2, dy + this.brickSize/2);
+          ctx.rotate(radians);
+          ctx.drawImage(img, -this.brickSize/2, -this.brickSize/2, this.brickSize, this.brickSize);
+          ctx.restore();
         }
       });
     });
@@ -254,8 +279,8 @@ export class TetrisComponent implements OnInit, AfterViewInit {
   private draw() {
     this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
-    this.drawMatrix(this.arena, {x: 0, y: 0});
-    this.drawMatrix(this.player.matrix, this.player.pos);
+    this.drawMatrix(this.context, this.arena, {x: 0, y: 0});
+    this.drawMatrix(this.context, this.player.matrix, this.player.pos);
   }
 
   private merge(arena, player) {
@@ -320,7 +345,9 @@ export class TetrisComponent implements OnInit, AfterViewInit {
   }
 
   private playerReset() {
-    this.player.matrix = this.randomPiece();
+    this.player.matrix = this.getBlock(this.nextPieceType);
+    this.nextPieceType = this.randomPieceType();
+
     this.player.pos.y = 0;
     this.player.pos.x = (this.arena[0].length / 2 | 0) -
              (this.player.matrix ? this.player.matrix[0].length / 2 | 0 : 0);
@@ -347,9 +374,8 @@ export class TetrisComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private randomPiece() {
-    const type = this.pieces[Math.floor(this.random(0, this.pieces.length-1))];
-    return this.createBlock(type);
+  private randomPieceType() {
+    return this.pieces[Math.floor(this.random(0, this.pieces.length-1))];
   }
 
   private random(min, max) { return (min + (Math.random() * (max - min))); }
