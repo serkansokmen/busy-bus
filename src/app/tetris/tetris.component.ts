@@ -354,7 +354,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   private playerReset() {
     this.player.matrix = this.getBlock(this.nextPieceType);
     this.nextPieceType = this.randomPieceType();
-    this.dropInterval -= 5;
+    this.dropInterval -= this.dropInterval * 0.01;
 
     this.player.pos.y = 0;
     this.player.pos.x = (this.arena[0].length / 2 | 0) -
