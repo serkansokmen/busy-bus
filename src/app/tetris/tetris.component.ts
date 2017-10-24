@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   ViewChild,
   ElementRef,
   Input,
@@ -40,7 +41,7 @@ type PieceType = keyof typeof PieceType;
   styleUrls: ['./tetris.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TetrisComponent implements OnInit, AfterViewInit {
+export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input('columns') columns: number = 16;
   @Input('rows') rows: number = 32;
@@ -50,6 +51,7 @@ export class TetrisComponent implements OnInit, AfterViewInit {
 
   @Output('onGameFinished') gameFinishedWithScore = new EventEmitter<number>();
 
+  private animationFrameRequestId?: any;
   public isRunning = false;
 
   // probabilities
@@ -119,9 +121,14 @@ export class TetrisComponent implements OnInit, AfterViewInit {
     this.startNewGame();
   }
 
+  ngOnDestroy() {
+    cancelAnimationFrame(this.animationFrameRequestId);
+  }
+
   startNewGame() {
     this.arena = this.createMatrix(this.columns, this.rows);
     this.player.score = 0;
+    this.dropInterval = 800;
     this.nextPieceType = this.randomPieceType();
     this.playerReset();
     this.isRunning = true;
@@ -134,12 +141,14 @@ export class TetrisComponent implements OnInit, AfterViewInit {
     this.dropCounter += deltaTime;
     if (this.dropCounter > this.dropInterval) {
       this.playerDrop();
+      this.dropInterval -= 0.001;
+      console.log(this.dropInterval);
     }
 
     this.lastTime = time;
 
     this.draw();
-    requestAnimationFrame(this.update.bind(this));
+    this.animationFrameRequestId = requestAnimationFrame(this.update.bind(this));
   }
 
   @HostListener('window:keydown', ['$event'])
