@@ -6,31 +6,26 @@
   justify-content: flex-end;
   flex-direction: column;
 
-  button {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-  }
-
-  .container {
+  .wrapper {
     position: relative;
-    background: transparent url('/assets/img/canvas-bg.png') center center no-repeat;
-    background-color: rgba(255,255,255,0.25);
-    background-size: cover;
-    box-shadow: 0px 12px 103px -9px rgba(0,0,0,0.54);
-    border-radius: 16px;
-    margin-bottom: 20px;
-    padding: 5px;
 
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      background-image: url('/assets/img/canvas-bg@2x.png');
+    .container {
+      background-image: url('/assets/img/bg-game.png');
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: column;
+
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image: url('/assets/img/bg-game@2x.png');
+      }
+
+      canvas {
+        margin: 0;
+      }
     }
 
-    .board {
-
-    }
     .next-piece {
       position: absolute;
       display: flex;
@@ -40,7 +35,7 @@
       right: -120px;
       padding: 5px;
       background-color: rgba(255,255,255,0.85);
-      box-shadow: 0px 12px 57px -9px rgba(0,0,0,0.27);
+      box-shadow: 0px 18px 58px -20px rgba(0,0,0,0.27);
       border-radius: 5px;
       width: 60px;
       height: 60px;

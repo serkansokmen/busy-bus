@@ -19,4 +19,12 @@ export class AppComponent {
       .confirm("Game Over!", `Score: ${score}`)
       .subscribe(res => this.isGameMounted = res);
   }
+
+  handleGameCancelled(score: number) {
+    this.isGameMounted = false;
+
+    this.dialogService
+      .confirm("Not bad!", `Score: ${score}`)
+      .subscribe(res => this.isGameMounted = res);
+  }
 }

@@ -50,6 +50,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('game') canvas: ElementRef;
 
   @Output('onGameFinished') gameFinishedWithScore = new EventEmitter<number>();
+  @Output('onGameCancelled') gameCancelled = new EventEmitter<number>();
 
   private animationFrameRequestId?: any;
   public isRunning = false;
@@ -109,12 +110,11 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.context = this.canvas.nativeElement.getContext('2d');
-    this.context.fillStyle = '#88b6a5';
     this.context.imageSmoothingEnabled = true;
-    // this.context.mozImageSmoothingEnabled = true;
-    // this.context.webkitImageSmoothingEnabled = true;
-    // this.context.mozImageSmoothingEnabled = true;
-    this.context.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.context.mozImageSmoothingEnabled = true;
+    this.context.webkitImageSmoothingEnabled = true;
+    this.context.mozImageSmoothingEnabled = true;
+    this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
   }
 
   ngAfterViewInit() {
@@ -162,6 +162,10 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (event.code === 'KeyW') {
       this.playerRotate(1);
     }
+  }
+
+  handleGameCancelled() {
+    this.gameCancelled.emit(this.player.score);
   }
 
   private arenaSweep() {
