@@ -55,7 +55,6 @@ export class AppComponent implements OnInit {
       img.src = `/assets/img/${partCacheKey}@2x.png`;
       this.images[partCacheKey] = img;
     }
-    console.log(this.images);
   }
 
   private getTrophyImage(score: number): string {

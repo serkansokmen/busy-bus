@@ -1,5 +1,5 @@
 :host {
-
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,13 +37,27 @@
       letter-spacing: 1.26px;
       background: #FFFFFF;
       font-weight: 700;
-      font-size: 15px;
+      // font-size: 15px;
+      font-size: 18px;
       width: auto;
       padding: 5px 15px;
       margin: 0;
       text-transform: uppercase;
       border-radius: 100px;
-      overflow: hidden;
+    }
+  }
+  .mat-icon-button.close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: white;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    .mat-icon {
+      // width: 12px;
+      // height: 12px;
+      // line-height: 12px;
     }
   }
 }
