@@ -9,8 +9,7 @@ import {
   Output,
   EventEmitter,
   HostListener,
-  ChangeDetectionStrategy,
-  NgZone } from '@angular/core';
+  ChangeDetectionStrategy } from '@angular/core';
 
 /** Utility function to create a K:V from a list of strings */
 function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {

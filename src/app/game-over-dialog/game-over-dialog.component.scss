@@ -5,6 +5,11 @@
   justify-content: center;
   flex-direction: column;
 
+  share-container {
+    position: relative;
+    transform: translateY(15px);
+  }
+
   img.trophy {
     max-height: 100px;
     margin: 0 auto;
@@ -29,8 +34,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 30px;
+    padding-bottom: 25px;
+    border-radius: 0 0 21px 21px;
 
     button.mat-button {
       color: #000000;
@@ -46,18 +52,10 @@
       border-radius: 100px;
     }
   }
-  .mat-icon-button.close-button {
+  .close-button {
     position: absolute;
-    top: 0;
-    right: 0;
-    background: white;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-    .mat-icon {
-      // width: 12px;
-      // height: 12px;
-      // line-height: 12px;
-    }
+    top: -25px;
+    right: -10px;
+    color: white;
   }
 }

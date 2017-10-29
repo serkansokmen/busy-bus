@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DialogService } from './services/dialog.service';
 import { PieceType } from './tetris/tetris.component';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
   public isGameMounted: boolean = false;
   public images: any = {};
@@ -31,11 +32,14 @@ export class AppComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+  }
+
   handleGameOverDialog(score: number) {
     this.isGameMounted = false;
 
     this.dialogService
-      .confirm('Game Over!', `Score: ${score}`, this.getTrophyImage(score))
+      .confirm('Game Over!', score)
       .subscribe(res => this.isGameMounted = res);
   }
 
@@ -43,7 +47,7 @@ export class AppComponent implements OnInit {
     this.isGameMounted = false;
 
     this.dialogService
-      .confirm('Not bad!', `Score: ${score}`, this.getTrophyImage(score))
+      .confirm('Game Over!', score)
       .subscribe(res => this.isGameMounted = res);
   }
 
@@ -54,18 +58,6 @@ export class AppComponent implements OnInit {
       const partCacheKey = `${identifier}-p${part+1}`;
       img.src = `/assets/img/${partCacheKey}@2x.png`;
       this.images[partCacheKey] = img;
-    }
-  }
-
-  private getTrophyImage(score: number): string {
-    if (score >= 1000) {
-      return 'trophy-leaves';
-    } else if (score < 1000 && score >= 500) {
-      return 'trophy-bridge';
-    } else if (score < 500 && score >= 100) {
-      return 'trophy-building';
-    } else {
-      return 'trophy-flame';
     }
   }
 }

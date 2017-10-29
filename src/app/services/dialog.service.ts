@@ -1,19 +1,19 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material';
-import { ConfirmDialog } from '../confirm-dialog/confirm-dialog.component';
+import { GameOverDialog } from '../game-over-dialog/game-over-dialog.component';
 
 @Injectable()
 export class DialogService {
 
   constructor(private dialog: MatDialog) { }
 
-  public confirm(title: string, message: string, trophyImage: string): Observable<boolean> {
+  public confirm(title: string, score: number): Observable<boolean> {
 
-    let dialogRef: MatDialogRef<ConfirmDialog> = this.dialog.open(ConfirmDialog);
+    let dialogRef: MatDialogRef<GameOverDialog> = this.dialog.open(GameOverDialog);
+
     dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.message = message;
-    dialogRef.componentInstance.trophyImage = trophyImage;
+    dialogRef.componentInstance.score = score;
 
     return dialogRef.afterClosed();
   }
