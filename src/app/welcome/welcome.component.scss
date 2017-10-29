@@ -11,63 +11,58 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    background-image: url('/assets/img/bg-bus.png');
+    background-image: url('/assets/img/bus.png');
     background-size: cover;
 
-    .color-band {
-      color: #FFFFFF;
-      background: #AA69D1;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      margin: 0;
-      width: 100%;
-      text-align: center;
-    }
-
-    h1, h2 {
+    h1 {
       font-weight: 400;
       text-transform: uppercase;
-    }
-
-    h1 {
-      font-size: 46px;
-      letter-spacing: 1.93px;
-    }
-
-    h2 {
-      font-size: 32px;
-      letter-spacing: 1.34px;
+      width: 100%;
+      height: 60px;
+      background: #AA69D1 url('/assets/img/title.png') center center no-repeat;
+      background-size: 294px 46px;
+      margin: 0;
+      padding: 0;
     }
 
     p {
-      flex: 0 1 auto;
+      padding: 25px 35px 10px 35px;
+      margin: 0;
+      font-family: Roboto-Regular;
       font-weight: 400;
       font-size: 15px;
       color: #000000;
       letter-spacing: 1.82px;
-      padding: 35px;
-      margin: 0;
-      strong {
-        font-weight: 700;
-        margin: 25px auto;
-        text-align: center;
-        display: block;
-        text-transform: uppercase;
-      }
+      text-align: left;
     }
 
     .controls {
       flex: 2 1 auto;
       width: 100%;
       background: transparent url('/assets/img/controls.png') center center no-repeat;
-      background-size: 242px 139px;
+      background-size: 217px 162px;
+    }
+
+    button.mat-button {
+      background: #FFFFFF url('/assets/img/start-txt.png') center center no-repeat;
+      background-size: 117px 29px;
+      width: 207px;
+      height: 64px;
+      margin-bottom: 10px;
+      border-radius: 100px;
+      overflow: hidden;
     }
 
     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      background-image: url('/assets/img/bg-bus@2x.png');
-
+      background-image: url('/assets/img/bus@2x.png');
+      h1 {
+        background-image: url('/assets/img/title@2x.png');
+      }
       .controls {
         background-image: url('/assets/img/controls@2x.png');
+      }
+      button.mat-button {
+        background-image: url('/assets/img/start-txt@2x.png');
       }
     }
   }

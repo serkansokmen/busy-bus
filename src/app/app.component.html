@@ -5,7 +5,7 @@
 <bb-tetris
   *ngIf="isGameMounted"
   [columns]="8"
-  [rows]="16"
-  [brickSize]="40"
+  [rows]="15"
+  [brickSize]="36"
   (onGameFinished)="handleGameOverDialog($event)"
   (onGameCancelled)="handleGameCancelled($event)"></bb-tetris>

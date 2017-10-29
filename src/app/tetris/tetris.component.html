@@ -1,7 +1,7 @@
 <div class="wrapper">
   <div class="container">
     <canvas class="board" #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
-    <button mat-button color="primary" (click)="handleGameCancelled()">End Game</button>
+    <button mat-button (click)="handleGameCancelled()" aria-label="End"></button>
   </div>
   <div class="next-piece" *ngIf="nextPieceType">
     <img [src]="'/assets/img/' + nextPieceType + '@2x.png'" alt="Next piece"/>

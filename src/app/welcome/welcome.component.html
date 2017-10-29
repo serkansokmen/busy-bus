@@ -1,21 +1,23 @@
 <div class="container">
-  <h1 class="color-band">34 AS</h1>
+  <h1><span class="visually-hidden">34 AS</span></h1>
   <p>
     34 AS is the very metrobus line that people of Istanbul get on between two sides of the city everyday for starting and ending their office day.
     <br>
     It's hard to fit in and to keep yourself in morph.
     <br>
-    <strong>GOOD LUCK!</strong>
+    <br>
+    GOOD LUCK!
   </p>
-  <h2 class="color-band">Controls</h2>
   <div class="controls">
     <ul class="visually-hidden">
-      <li><strong>Q</strong> Rotate Left</li>
+      <li><strong>Q</strong> Rotate Lef-t</li>
       <li><strong>W</strong> Rotate Right</li>
       <li><strong>&larr;</strong> Left</li>
       <li><strong>&rarr;</strong> Right</li>
       <li><strong>&darr;</strong> Collapse</li>
     </ul>
   </div>
-  <button mat-button color="primary" (click)="startGame.emit($event)">Start</button>
+  <button mat-button (click)="startGame.emit($event)" aria-label="Start">
+    <!-- Start -->
+  </button>
 </div>
