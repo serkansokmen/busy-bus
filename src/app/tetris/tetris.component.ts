@@ -9,7 +9,8 @@ import {
   Output,
   EventEmitter,
   HostListener,
-  ChangeDetectionStrategy } from '@angular/core';
+  ChangeDetectionStrategy,
+  ChangeDetectorRef } from '@angular/core';
 
 /** Utility function to create a K:V from a list of strings */
 function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
@@ -81,7 +82,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   private backgroundImg: HTMLImageElement;
 
-  constructor() { }
+  constructor(private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.context = this.canvas.nativeElement.getContext('2d');
@@ -121,6 +122,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
     this.lastTime = time;
 
     this.draw();
+    this.cdRef.detectChanges();
     this.animationFrameRequestId = requestAnimationFrame(this.update.bind(this));
   }
 
