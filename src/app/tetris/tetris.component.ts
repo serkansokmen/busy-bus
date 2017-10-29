@@ -21,7 +21,7 @@ function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
 }
 
 /** Create a K:V */
-const PieceType = strEnum([
+export const PieceType = strEnum([
   'lineF',
   'lineM',
   'leftHook',
@@ -35,7 +35,6 @@ const PieceType = strEnum([
 /** Create a Type */
 type PieceType = keyof typeof PieceType;
 
-
 @Component({
   selector: 'bb-tetris',
   templateUrl: './tetris.component.html',
@@ -47,6 +46,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('columns') columns: number = 16;
   @Input('rows') rows: number = 32;
   @Input('brickSize') brickSize: number = 20;
+  @Input('imageLoader') images: any = {};
 
   @ViewChild('game') canvas: ElementRef;
 
@@ -80,34 +80,9 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
     matrix: null,
     score: 0
   };
-  private images: any = {};
   private backgroundImg: HTMLImageElement;
-  constructor(private zone: NgZone) {
-    // Pieces
-    // IILJOZST
-    [
-      [PieceType.lineF, 4],
-      [PieceType.lineM, 4],
-      [PieceType.rightHook, 4],
-      [PieceType.leftHook, 4],
-      [PieceType.square, 4],
-      [PieceType.leftZag, 4],
-      [PieceType.rightZag, 4],
-      [PieceType.arrow, 4],
-    ].map(item => {
-      this.loadImagePiece(item[0], item[1]);
-    });
-  }
 
-  private loadImagePiece(identifier: any, partCount: any) {
-    for (var part = 0; part < partCount; ++part) {
-      let img = document.createElement('img');
-      img.crossOrigin = 'anonymous';
-      const partCacheKey = `${identifier}-p${part+1}`;
-      img.src = `/assets/img/${partCacheKey}@2x.png`;
-      this.images[partCacheKey] = img;
-    }
-  }
+  constructor() { }
 
   ngOnInit() {
     this.context = this.canvas.nativeElement.getContext('2d');
