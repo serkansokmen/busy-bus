@@ -1,0 +1,61 @@
+:host {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  share-container {
+    position: relative;
+    transform: translateY(15px);
+  }
+
+  img.trophy {
+    max-height: 100px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-weight: 900;
+    font-size: 20px;
+    color: #181818;
+    letter-spacing: 1.64px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  p {
+    font-weight: 700;
+    letter-spacing: 1.13px;
+    text-align: center;
+  }
+
+  .controls {
+    background-color: #F3DA47;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 25px;
+    border-radius: 0 0 21px 21px;
+
+    button.mat-button {
+      color: #000000;
+      letter-spacing: 1.26px;
+      background: #FFFFFF;
+      font-weight: 700;
+      // font-size: 15px;
+      font-size: 18px;
+      width: auto;
+      padding: 5px 15px;
+      margin: 0;
+      text-transform: uppercase;
+      border-radius: 100px;
+    }
+  }
+  .close-button {
+    position: absolute;
+    top: -25px;
+    right: -10px;
+    color: white;
+  }
+}

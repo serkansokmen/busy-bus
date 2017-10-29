@@ -1,0 +1,16 @@
+<button class="close-button" mat-mini-fab color="accent" (click)="dialogRef.close()">
+  <mat-icon fontSet="fa" fontIcon="fa-close"></mat-icon>
+</button>
+<img class="trophy" [src]="'/assets/img/' + trophyImage + '@2x.png'" alt="Trophy"/>
+<h1>Game Over!</h1>
+<p>{{ message }}</p>
+<share-container
+  direction="horizontal"
+  [addedText]=""
+  [expandable]="false"
+  [textEnabled]="false"
+  [platforms]="['twitter','facebook']">
+</share-container>
+<div class="controls">
+  <button mat-button (click)="dialogRef.close(true)" aria-label="Play Again">Play Again</button>
+</div>

@@ -5,29 +5,63 @@
   align-items: center;
   justify-content: flex-end;
   flex-direction: column;
-  background: #f2adb7 url('/assets/img/background.png') center bottom no-repeat;
-  background-size: 100vw;
 
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    background-image: url('/assets/img/background@2x.png');
-  }
+  .wrapper {
+    position: relative;
 
-  .container {
-    background: transparent url('/assets/img/canvas-bg.png') center center no-repeat;
-    // border: 1px solid white;
-    background-color: rgba(255,255,255,0.25);
-    background-size: cover;
-    box-shadow: 0px 12px 103px -9px rgba(0,0,0,0.54);
-    border-radius: 16px;
-    margin-bottom: 20px;
-    padding: 5px;
-    text-align: center;
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      // background-image: url('/assets/img/canvas-bg@2x.png');
+    .container {
+      background-image: url('/assets/img/bg-game.png');
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: column;
+
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image: url('/assets/img/bg-game@2x.png');
+      }
+
+      canvas {
+        margin: 8px 0 0 0;
+      }
     }
-  }
-  canvas {
-    margin: 0 auto;
-    // image-rendering: unset;
+
+    button.mat-button {
+      background: #FFFFFF url('/assets/img/end-txt.png') center center no-repeat;
+      background-size: 67px 28px;
+      width: 207px;
+      height: 64px;
+      margin-bottom: 10px;
+      border-radius: 100px;
+      overflow: hidden;
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image: url('/assets/img/end-txt@2x.png');
+      }
+    }
+
+    .next-piece {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 30px;
+      right: -220px;
+      padding: 0;
+      background: transparent url('/assets/img/bg-next-piece.png') center center no-repeat;
+      background-size: 184px 185px;
+      width: 184px;
+      height: 185px;
+      box-shadow: 0px 18px 58px -20px rgba(0,0,0,0.27);
+      border-radius: 5px;
+
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image: url('/assets/img/bg-next-piece@2x.png');
+      }
+
+      img {
+        max-width: 80px;
+        max-height: 80px;
+      }
+    }
   }
 }
