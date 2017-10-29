@@ -1,10 +1,10 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import url("https://fonts.googleapis.com/css?family=Roboto:500,700");
 
 html, body, app-root {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 * {
@@ -82,4 +82,10 @@ pre {
     border-radius: 100px;
     overflow: hidden;
   }
+}
+
+.mat-dialog-container {
+  width: 260px !important;
+  padding: 15px 0 0 0 !important;
+  border-radius: 21px !important;
 }

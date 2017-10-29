@@ -1,6 +1,6 @@
-<p>{{ title }}</p>
+<img class="trophy" [src]="'/assets/img/' + trophyImage + '@2x.png'" alt="Trophy"/>
+<h1>Game Over!</h1>
 <p>{{ message }}</p>
-<button color="primary" mat-raised-button
-    (click)="dialogRef.close(true)">Play Again</button>
-<button mat-button
-    (click)="dialogRef.close()">Nevermind</button>
+<div class="controls">
+  <button mat-button (click)="dialogRef.close(true)">Play Again</button>
+</div>

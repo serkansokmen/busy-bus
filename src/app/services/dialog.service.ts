@@ -8,11 +8,12 @@ export class DialogService {
 
   constructor(private dialog: MatDialog) { }
 
-  public confirm(title: string, message: string): Observable<boolean> {
+  public confirm(title: string, message: string, trophyImage: string): Observable<boolean> {
 
     let dialogRef: MatDialogRef<ConfirmDialog> = this.dialog.open(ConfirmDialog);
     dialogRef.componentInstance.title = title;
     dialogRef.componentInstance.message = message;
+    dialogRef.componentInstance.trophyImage = trophyImage;
 
     return dialogRef.afterClosed();
   }

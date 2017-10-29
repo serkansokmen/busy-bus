@@ -9,7 +9,8 @@ import {
   Output,
   EventEmitter,
   HostListener,
-  ChangeDetectionStrategy } from '@angular/core';
+  ChangeDetectionStrategy,
+  NgZone } from '@angular/core';
 
 /** Utility function to create a K:V from a list of strings */
 function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
@@ -57,7 +58,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   public nextPieceType: PieceType;
 
   // probabilities
-  private pieces: PieceType[] = [
+  public pieces: PieceType[] = [
     PieceType.lineF, PieceType.lineF, PieceType.lineF, PieceType.lineF,
     PieceType.lineM, PieceType.lineM, PieceType.lineM, PieceType.lineM,
     PieceType.leftHook, PieceType.leftHook, PieceType.leftHook, PieceType.leftHook,
@@ -81,7 +82,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   private images: any = {};
   private backgroundImg: HTMLImageElement;
-  constructor() {
+  constructor(private zone: NgZone) {
     // Pieces
     // IILJOZST
     [

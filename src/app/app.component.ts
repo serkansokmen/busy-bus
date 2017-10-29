@@ -16,7 +16,7 @@ export class AppComponent {
     this.isGameMounted = false;
 
     this.dialogService
-      .confirm("Game Over!", `Score: ${score}`)
+      .confirm('Game Over!', `Score: ${score}`, this.getTrophyImage(score))
       .subscribe(res => this.isGameMounted = res);
   }
 
@@ -24,7 +24,19 @@ export class AppComponent {
     this.isGameMounted = false;
 
     this.dialogService
-      .confirm("Not bad!", `Score: ${score}`)
+      .confirm('Not bad!', `Score: ${score}`, this.getTrophyImage(score))
       .subscribe(res => this.isGameMounted = res);
+  }
+
+  private getTrophyImage(score: number): string {
+    if (score >= 1000) {
+      return 'trophy-leaves';
+    } else if (score < 1000 && score >= 500) {
+      return 'trophy-bridge';
+    } else if (score < 500 && score >= 100) {
+      return 'trophy-building';
+    } else {
+      return 'trophy-flame';
+    }
   }
 }
