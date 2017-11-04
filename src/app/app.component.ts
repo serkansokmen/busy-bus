@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       let img = document.createElement('img');
       img.crossOrigin = 'anonymous';
       const partCacheKey = `${identifier}-p${part+1}`;
-      img.src = `/assets/img/${partCacheKey}@2x.png`;
+      img.src = `assets/img/${partCacheKey}@2x.png`;
       this.images[partCacheKey] = img;
     }
   }
