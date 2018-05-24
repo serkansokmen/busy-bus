@@ -5,10 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatIconModule, MatDialogModule } from '@angular/material';
 import { ShareModule } from '@ngx-share/core';
 import { AppComponent } from './app.component';
-import { TetrisComponent } from './tetris/tetris.component';
-import { GameOverDialog } from './game-over-dialog/game-over-dialog.component';
-import { DialogService } from './services/dialog.service';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { TetrisComponent } from './tetris/tetris.component';
+import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
+import { DialogService } from './services/dialog.service';
 
 @NgModule({
   imports: [
@@ -22,15 +22,15 @@ import { WelcomeComponent } from './welcome/welcome.component';
   ],
   declarations: [
     AppComponent,
-    TetrisComponent,
-    GameOverDialog,
     WelcomeComponent,
+    TetrisComponent,
+    GameOverDialogComponent
   ],
   providers: [
     DialogService,
   ],
   entryComponents: [
-    GameOverDialog,
+    GameOverDialogComponent,
   ],
   bootstrap: [AppComponent]
 })

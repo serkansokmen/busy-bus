@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'bb-game-over-dialog',
+  selector: 'app-game-over-dialog',
   templateUrl: './game-over-dialog.component.html',
   styleUrls: ['./game-over-dialog.component.scss']
 })
-export class GameOverDialog implements OnInit {
+export class GameOverDialogComponent implements OnInit {
 
   public title: string;
   public message: string;
   public score: number;
   public trophyImage: string;
 
-  constructor(public dialogRef: MatDialogRef<GameOverDialog>) { }
+  constructor(public dialogRef: MatDialogRef<GameOverDialogComponent>) { }
 
   ngOnInit() {
     this.message = `Score: ${this.score}`;

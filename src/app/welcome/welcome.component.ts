@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'bb-welcome',
+  selector: 'app-welcome',
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss']
 })
