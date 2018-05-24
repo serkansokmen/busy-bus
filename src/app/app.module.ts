@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatIconModule, MatDialogModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatDialogModule, MatInputModule, MatFormFieldModule } from '@angular/material';
 import { ShareModule } from '@ngx-share/core';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -12,16 +13,19 @@ import { DialogService } from './services/dialog.service';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
-import { ScoreListComponent } from './score-list/score-list.component';
+import { ScoreBoardComponent } from './score-board/score-board.component';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
     ShareModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
@@ -31,7 +35,7 @@ import { ScoreListComponent } from './score-list/score-list.component';
     WelcomeComponent,
     TetrisComponent,
     GameOverDialogComponent,
-    ScoreListComponent
+    ScoreBoardComponent
   ],
   providers: [
     DialogService,

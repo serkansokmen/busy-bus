@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { DialogService } from './services/dialog.service';
 import { PieceType } from './tetris/tetris.component';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private db: AngularFirestore,
     private dialogService: DialogService
   ) {
-    this.scores = db.collection('scores-34as').valueChanges();
+    this.scores = db.collection<{ name: string, score: number }>('scores-34as', ref => ref.orderBy('score', 'desc').limit(100)).valueChanges();
   }
 
   ngOnInit() {
