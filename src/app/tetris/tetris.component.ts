@@ -36,7 +36,7 @@ export const PieceType = strEnum([
 type PieceType = keyof typeof PieceType;
 
 @Component({
-  selector: 'bb-tetris',
+  selector: 'app-tetris',
   templateUrl: './tetris.component.html',
   styleUrls: ['./tetris.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

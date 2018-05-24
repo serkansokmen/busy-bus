@@ -1,12 +1,12 @@
-<bb-welcome
+<app-welcome
   [style.display]="isGameMounted ? 'none' : 'flex'"
-  (onStartGame)="isGameMounted = true"></bb-welcome>
+  (onStartGame)="isGameMounted = true"></app-welcome>
 
-<bb-tetris
+<app-tetris
   *ngIf="isGameMounted"
   [columns]="8"
   [rows]="15"
   [brickSize]="36"
   [imageLoader]="images"
   (onGameFinished)="handleGameOverDialog($event)"
-  (onGameCancelled)="handleGameCancelled($event)"></bb-tetris>
+  (onGameCancelled)="handleGameCancelled($event)"></app-tetris>

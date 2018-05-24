@@ -5,9 +5,16 @@
   justify-content: center;
   flex-direction: column;
 
-  share-container {
+  .share-container {
     position: relative;
     transform: translateY(15px);
+
+    .mat-mini-fab {
+      color: white;
+      .mat-icon {
+        font-size: 20px;
+      }
+    }
   }
 
   img.trophy {
