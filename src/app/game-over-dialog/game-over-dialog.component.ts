@@ -13,7 +13,7 @@ export class GameOverDialogComponent implements OnInit {
   public score: number;
   public trophyImage: string;
 
-  constructor(public dialogRef: MatDialogRef<GameOverDialogComponent>) { }
+  constructor(private dialogRef: MatDialogRef<GameOverDialogComponent>) { }
 
   ngOnInit() {
     this.message = `Score: ${this.score}`;

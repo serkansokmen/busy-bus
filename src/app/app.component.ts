@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { DialogService } from './services/dialog.service';
 import { PieceType } from './tetris/tetris.component';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
 
 @Component({
@@ -12,8 +14,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public isGameMounted: boolean = false;
   public images: any = {};
+  public scores: Observable<any[]>;
 
-  constructor(private dialogService: DialogService) {}
+  constructor(
+    private db: AngularFirestore,
+    private dialogService: DialogService
+  ) {
+    this.scores = db.collection('scores-34as').valueChanges();
+  }
 
   ngOnInit() {
     // Pieces

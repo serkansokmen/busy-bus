@@ -10,3 +10,5 @@
   [imageLoader]="images"
   (onGameFinished)="handleGameOverDialog($event)"
   (onGameCancelled)="handleGameCancelled($event)"></app-tetris>
+
+<app-score-list [scores]="scores | async"></app-score-list>
