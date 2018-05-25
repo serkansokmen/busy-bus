@@ -1,3 +1,4 @@
 <p *ngFor="let item of scores">
+  <img class="trophy" [src]="'assets/img/' + scoreBoard.getTrophyImage(item.score) + '.png'" alt="Trophy" height="40"/>
   <span [innerHTML]="item.name"></span>: <span [innerHTML]="item.score"></span>
 </p>

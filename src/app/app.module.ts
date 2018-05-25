@@ -35,7 +35,7 @@ import { ScoreBoardComponent } from './score-board/score-board.component';
     WelcomeComponent,
     TetrisComponent,
     GameOverDialogComponent,
-    ScoreBoardComponent
+    ScoreBoardComponent,
   ],
   providers: [
     ScoreBoardService,
