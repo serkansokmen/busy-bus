@@ -11,29 +11,7 @@ import {
   HostListener,
   ChangeDetectionStrategy,
   ChangeDetectorRef } from '@angular/core';
-
-/** Utility function to create a K:V from a list of strings */
-function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
-  return o.reduce((res, key) => {
-    res[key] = key;
-    return res;
-  }, Object.create(null));
-}
-
-/** Create a K:V */
-export const PieceType = strEnum([
-  'lineF',
-  'lineM',
-  'leftHook',
-  'rightHook',
-  'square',
-  'rightZag',
-  'leftZag',
-  'arrow'
-]);
-
-/** Create a Type */
-type PieceType = keyof typeof PieceType;
+import { PieceType } from '../services';
 
 @Component({
   selector: 'app-tetris',
@@ -59,14 +37,14 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // probabilities
   public pieces: PieceType[] = [
-    PieceType.lineF, PieceType.lineF, PieceType.lineF, PieceType.lineF,
-    PieceType.lineM, PieceType.lineM, PieceType.lineM, PieceType.lineM,
-    PieceType.leftHook, PieceType.leftHook, PieceType.leftHook, PieceType.leftHook,
-    PieceType.rightHook, PieceType.rightHook, PieceType.rightHook, PieceType.rightHook,
-    PieceType.square, PieceType.square, PieceType.square, PieceType.square,
-    PieceType.rightZag, PieceType.rightZag, PieceType.rightZag, PieceType.rightZag,
-    PieceType.leftZag, PieceType.leftZag, PieceType.leftZag, PieceType.leftZag,
-    PieceType.arrow, PieceType.arrow, PieceType.arrow, PieceType.arrow,
+    'lineF', 'lineF', 'lineF', 'lineF',
+    'lineM', 'lineM', 'lineM', 'lineM',
+    'leftHook', 'leftHook', 'leftHook', 'leftHook',
+    'rightHook', 'rightHook', 'rightHook', 'rightHook',
+    'square', 'square', 'square', 'square',
+    'rightZag', 'rightZag', 'rightZag', 'rightZag',
+    'leftZag', 'leftZag', 'leftZag', 'leftZag',
+    'arrow', 'arrow', 'arrow', 'arrow',
   ];
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
@@ -191,7 +169,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getBlock(type: PieceType) {
-    if (type === PieceType.lineF) {
+    if (type === 'lineF') {
       return [
         [0, ['lineF-p1', 0], 0, 0],
         [0, ['lineF-p2', 0], 0, 0],
@@ -199,43 +177,43 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
         [0, ['lineF-p4', 0], 0, 0],
       ];
     }
-    else if (type === PieceType.lineM) {
+    else if (type === 'lineM') {
       return [
         [0, ['lineM-p1', 0], 0, 0],
         [0, ['lineM-p2', 0], 0, 0],
         [0, ['lineM-p3', 0], 0, 0],
         [0, ['lineM-p4', 0], 0, 0],
       ];
-    } else if (type === PieceType.rightHook) {
+    } else if (type === 'rightHook') {
       return [
         [0, ['rightHook-p1', 0], 0],
         [0, ['rightHook-p2', 0], 0],
         [0, ['rightHook-p3', 0], ['rightHook-p4', 0]],
       ];
-    } else if (type === PieceType.leftHook) {
+    } else if (type === 'leftHook') {
       return [
         [0,                  ['leftHook-p4', 0], 0],
         [0,                  ['leftHook-p3', 0], 0],
         [['leftHook-p1', 0], ['leftHook-p2', 0], 0],
       ];
-    } else if (type === PieceType.square) {
+    } else if (type === 'square') {
       return [
         [['square-p1', 0], ['square-p2', 0]],
         [['square-p3', 0], ['square-p4', 0]],
       ];
-    } else if (type === PieceType.leftZag) {
+    } else if (type === 'leftZag') {
       return [
         [0,                 ['leftZag-p1', 0], 0],
         [['leftZag-p3', 0], ['leftZag-p2', 0], 0],
         [['leftZag-p4', 0], 0,                 0],
       ];
-    } else if (type === PieceType.rightZag) {
+    } else if (type === 'rightZag') {
       return [
         [0, ['rightZag-p1', 0], 0],
         [0, ['rightZag-p2', 0], ['rightZag-p3', 0]],
         [0, 0,                  ['rightZag-p4', 0]],
       ];
-    } else if (type === PieceType.arrow) {
+    } else if (type === 'arrow') {
       return [
         [0,               ['arrow-p1', 0], 0],
         [['arrow-p2', 0], ['arrow-p3', 0], ['arrow-p4', 0]],
