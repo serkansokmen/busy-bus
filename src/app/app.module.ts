@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { TetrisComponent } from './tetris/tetris.component';
 import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
-import { DialogService } from './services/dialog.service';
+import { ScoreBoardService } from './services';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
@@ -38,7 +38,7 @@ import { ScoreBoardComponent } from './score-board/score-board.component';
     ScoreBoardComponent
   ],
   providers: [
-    DialogService,
+    ScoreBoardService,
   ],
   entryComponents: [
     GameOverDialogComponent,

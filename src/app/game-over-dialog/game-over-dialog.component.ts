@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { ScoreBoardService } from '../services';
 
 @Component({
   selector: 'app-game-over-dialog',
@@ -20,12 +20,12 @@ export class GameOverDialogComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<GameOverDialogComponent>,
-    private db: AngularFirestore,
+    private scoreBoard: ScoreBoardService,
   ) { }
 
   ngOnInit() {
     this.message = `Score: ${this.score}`;
-    this.trophyImage = this.getTrophyImage(this.score);
+    this.trophyImage = this.scoreBoard.getTrophyImage(this.score);
 
     this.scoreForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -39,31 +39,16 @@ export class GameOverDialogComponent implements OnInit {
   onSubmitScore(event) {
     if (this.scoreForm.valid) {
       this.scoreForm.disable();
-      this.db.collection<{ name: string, score: number }>('scores-34as').add(this.scoreForm.value);
-      // this.dialogRef.close({
-      //   playAgain: false,
-      //   saveScore: this.scoreForm.value,
-      // });
+      this.scoreBoard.save(this.scoreForm.value);
     }
   }
 
   onPlayAgain(event) {
-    this.dialogRef.close({
-      playAgain: true,
-      saveScore: false,
-    });
+    this.dialogRef.close(true);
   }
 
-  private getTrophyImage(score: number): string {
-    if (score >= 1000) {
-      return 'trophy-leaves';
-    } else if (score < 1000 && score >= 500) {
-      return 'trophy-bridge';
-    } else if (score < 500 && score >= 100) {
-      return 'trophy-building';
-    } else {
-      return 'trophy-flame';
-    }
+  onCancel(event) {
+    this.dialogRef.close(false);
   }
 
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable, from } from 'rxjs';
-import { DialogService } from './services/dialog.service';
+import { ScoreBoardService } from './services';
 import { PieceType } from './tetris/tetris.component';
-import { AngularFirestore } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
+import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +18,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   public scores: Observable<any[]>;
 
   constructor(
-    private db: AngularFirestore,
-    private dialogService: DialogService
+    private scoreBoard: ScoreBoardService,
+    private dialog: MatDialog,
   ) {
-    this.scores = db.collection<{ name: string, score: number }>('scores-34as', ref => ref.orderBy('score', 'desc').limit(100)).valueChanges();
+    this.scores = scoreBoard.scores;
   }
 
   ngOnInit() {
@@ -45,18 +46,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   handleGameOverDialog(score: number) {
     this.isGameMounted = false;
-
-    this.dialogService
-      .confirm('Game Over!', score)
-      .subscribe(res => this.isGameMounted = res);
+    this.launchGameOverDialog(score);
   }
 
   handleGameCancelled(score: number) {
     this.isGameMounted = false;
+    this.launchGameOverDialog(score);
+  }
 
-    this.dialogService
-      .confirm('Game Over!', score)
-      .subscribe(res => this.isGameMounted = res);
+  private launchGameOverDialog(score: number) {
+    let dialogRef: MatDialogRef<GameOverDialogComponent> = this.dialog.open(GameOverDialogComponent);
+
+    dialogRef.componentInstance.title = 'Game Over!';
+    dialogRef.componentInstance.score = score;
+
+    dialogRef.afterClosed().subscribe(res => this.isGameMounted = res);
   }
 
   private loadImagePiece(identifier: any, partCount: any) {
