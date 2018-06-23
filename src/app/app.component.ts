@@ -15,6 +15,7 @@ export class AppComponent {
   public isGameMounted: boolean = false;
   public images: any = {};
   public scores: Observable<any[]>;
+  public isScoreboardVisible: boolean = false;
 
   constructor(
     private pieces: PieceService,

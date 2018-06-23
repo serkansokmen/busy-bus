@@ -11,4 +11,5 @@
   (onGameFinished)="handleGameOverDialog($event)"
   (onGameCancelled)="handleGameCancelled($event)"></app-tetris>
 
-<app-score-board [scores]="scores | async"></app-score-board>
+<app-score-board *ngIf="isScoreboardVisible"
+  [scores]="scores | async"></app-score-board>
