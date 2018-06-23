@@ -7,4 +7,7 @@
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     background-image: url('/assets/img/background@2x.png');
   }
+  &.handset {
+    background: #f2adb7;
+  }
 }

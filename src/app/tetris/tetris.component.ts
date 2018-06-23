@@ -9,8 +9,10 @@ import {
   Output,
   EventEmitter,
   HostListener,
+  HostBinding,
   ChangeDetectionStrategy,
   ChangeDetectorRef } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { PieceType } from '../services';
 
 @Component({
@@ -30,6 +32,11 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output('onGameFinished') gameFinishedWithScore = new EventEmitter<number>();
   @Output('onGameCancelled') gameCancelled = new EventEmitter<number>();
+
+  @HostBinding('class.handset') hasDeviceHandsetClass: boolean;
+  @Input()
+  set isDeviceHandset(value) {  this.hasDeviceHandsetClass = value }
+  get isDeviceHandset() { return this.hasDeviceHandsetClass }
 
   private animationFrameRequestId?: any;
   public isRunning = false;
@@ -60,7 +67,9 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   private backgroundImg: HTMLImageElement;
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private cdRef: ChangeDetectorRef) {
+    this.hasDeviceHandsetClass = this._isDeviceHandset;
+  }
 
   ngOnInit() {
     this.context = this.canvas.nativeElement.getContext('2d');

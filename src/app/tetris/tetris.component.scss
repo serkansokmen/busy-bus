@@ -6,6 +6,10 @@
   justify-content: flex-end;
   flex-direction: column;
 
+  &.handset {
+    justify-content: center;
+  }
+
   .wrapper {
     position: relative;
 

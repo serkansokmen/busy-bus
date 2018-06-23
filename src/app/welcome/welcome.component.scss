@@ -6,6 +6,13 @@
   justify-content: flex-end;
   flex-direction: column;
 
+  &.handset {
+    justify-content: center;
+    .container {
+      background-image: none;
+    }
+  }
+
   .container {
     display: flex;
     align-items: center;

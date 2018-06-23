@@ -1,4 +1,5 @@
 <app-welcome
+  [isDeviceHandset]="isDeviceHandset"
   [style.display]="isGameMounted ? 'none' : 'flex'"
   (onStartGame)="isGameMounted = true"></app-welcome>
 
@@ -12,4 +13,4 @@
   (onGameCancelled)="handleGameCancelled($event)"></app-tetris>
 
 <app-score-board *ngIf="isScoreboardVisible"
-  [scores]="scores | async"></app-score-board>
+  [scores]="scores$ | async"></app-score-board>

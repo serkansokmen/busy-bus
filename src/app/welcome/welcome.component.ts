@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-welcome',
@@ -9,6 +10,9 @@ export class WelcomeComponent {
 
   @Output('onStartGame') startGame = new EventEmitter<any>();
 
-  constructor() { }
+  @HostBinding('class.handset') hasDeviceHandsetClass: boolean;
+  @Input()
+  set isDeviceHandset(value) {  this.hasDeviceHandsetClass = value }
+  get isDeviceHandset() { return this.hasDeviceHandsetClass }
 
 }
