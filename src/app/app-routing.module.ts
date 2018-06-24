@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { StartPageComponent } from './pages/start-page/start-page.component';
 import { GamePageComponent } from './pages/game-page/game-page.component';
-import { GameOverComponent } from './pages/game-over/game-over.component';
 
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { TetrisComponent } from './components/tetris/tetris.component';
@@ -13,7 +12,6 @@ import { ScoreBoardComponent } from './components/score-board/score-board.compon
 export const ROUTING_COMPONENTS = [
   StartPageComponent,
   GamePageComponent,
-  GameOverComponent,
 ];
 
 export const COMPONENTS = [

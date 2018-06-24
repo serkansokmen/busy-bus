@@ -15,8 +15,6 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
 import { LayoutState } from './state/layout.state';
 import { PiecesState } from './state/pieces.state';
-import { StartPageComponent } from './pages/start-page/start-page.component';
-import { GamePageComponent } from './pages/game-page/game-page.component';
 
 @NgModule({
   imports: [
