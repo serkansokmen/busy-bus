@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:device": "ng serve --host 0.0.0.0",
     "build": "ng build --prod --build-optimizer --base-href /34as/",
     "test": "ng test",
     "lint": "ng lint",
@@ -26,6 +27,8 @@
     "@fortawesome/free-brands-svg-icons": "^5.1.0-8",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-8",
     "@ngx-share/core": "^5.3.1",
+    "@ngxs/logger-plugin": "^3.1.4",
+    "@ngxs/store": "^3.1.4",
     "angularfire2": "^5.0.0-rc.11",
     "core-js": "^2.5.7",
     "firebase": "^5.1.0",

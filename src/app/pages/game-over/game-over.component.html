@@ -1,0 +1,24 @@
+<img class="trophy" [src]="'assets/img/' + trophyImage + '@2x.png'" alt="Trophy"/>
+<h1>Game Over!</h1>
+<p>{{ message }}</p>
+
+<form class="score-form" [formGroup]="scoreForm" (ngSubmit)="onSubmitScore($event)" novalidate>
+  <mat-form-field>
+    <input matInput formControlName="name" placeholder="Enter name" maxlength="6" required="true" />
+  </mat-form-field>
+</form>
+
+<div class="share-container">
+  <button mat-mini-fab shareButton="twitter" [style.backgroundColor]="'#1da1f2'">
+    <mat-icon fontSet="fa" fontIcon="fa-twitter"></mat-icon>
+  </button>
+
+  <button mat-mini-fab shareButton="facebook" [style.backgroundColor]="'#29487d'">
+    <mat-icon fontSet="fa" fontIcon="fa-facebook"></mat-icon>
+  </button>
+</div>
+
+
+<div class="controls">
+  <button mat-button (click)="onPlayAgain($event)" aria-label="Play Again">Play Again</button>
+</div>

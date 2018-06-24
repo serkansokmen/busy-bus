@@ -8,9 +8,6 @@
 
   &.handset {
     justify-content: center;
-    .container {
-      background-image: none;
-    }
   }
 
   .container {
@@ -18,7 +15,7 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    background-image: url('/assets/img/bus.png');
+    background: transparent url('/assets/img/bus.png') center center no-repeat;
     background-size: cover;
 
     h1 {
@@ -46,8 +43,14 @@
     .controls {
       flex: 2 1 auto;
       width: 100%;
-      background: transparent url('/assets/img/controls.png') center center no-repeat;
-      background-size: 217px 162px;
+      &.mobile-controls {
+        background: transparent url('/assets/img/mobile-controls.png') center center no-repeat;
+        background-size: 217px 162px;
+      }
+      &.desktop-controls {
+        background: transparent url('/assets/img/desktop-controls.png') center center no-repeat;
+        background-size: 217px 162px;
+      }
     }
 
     button.mat-button {

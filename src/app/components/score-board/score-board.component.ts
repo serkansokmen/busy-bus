@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ScoreBoardService  } from '../services';
+import { ScoreBoardService  } from '../../services/score-board.service';
 
 @Component({
   selector: 'app-score-board',

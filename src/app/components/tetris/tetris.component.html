@@ -1,4 +1,6 @@
-<div class="wrapper">
+<div class="wrapper"
+  (tap)="handleTap($event)"
+  (panend)="handlePanEnd($event)">
   <div class="container">
     <canvas class="board" #game [width]="columns * brickSize" [height]="rows * brickSize"></canvas>
     <button mat-button (click)="handleGameCancelled()" aria-label="End"></button>

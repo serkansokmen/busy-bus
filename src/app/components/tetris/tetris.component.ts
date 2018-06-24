@@ -13,7 +13,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { PieceType } from '../services';
+import { PieceType } from '../../services/piece.service';
 
 @Component({
   selector: 'app-tetris',
@@ -23,10 +23,22 @@ import { PieceType } from '../services';
 })
 export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input('columns') columns: number = 16;
-  @Input('rows') rows: number = 32;
-  @Input('brickSize') brickSize: number = 20;
-  @Input('imageLoader') images: any = {};
+  private _columns = new BehaviorSubject<number>(1);
+  @Input('columns')
+  set columns(value) { this._columns.next(value); }
+  get columns() { return this._columns.value; }
+
+  private _rows = new BehaviorSubject<number>(3);
+  @Input('rows')
+  set rows(value) { this._rows.next(value); }
+  get rows() { return this._rows.value; }
+
+  private _brickSize = new BehaviorSubject<number>(10);
+  @Input('brickSize')
+  set brickSize(value) { this._brickSize.next(value); }
+  get brickSize() { return this._brickSize.value; }
+
+  @Input('images') images: any = {};
 
   @ViewChild('game') canvas: ElementRef;
 
@@ -35,7 +47,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostBinding('class.handset') hasDeviceHandsetClass: boolean;
   @Input()
-  set isDeviceHandset(value) {  this.hasDeviceHandsetClass = value }
+  set isDeviceHandset(value) { this.hasDeviceHandsetClass = value }
   get isDeviceHandset() { return this.hasDeviceHandsetClass }
 
   private animationFrameRequestId?: any;
@@ -67,9 +79,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   private backgroundImg: HTMLImageElement;
 
-  constructor(private cdRef: ChangeDetectorRef) {
-    this.hasDeviceHandsetClass = this._isDeviceHandset;
-  }
+  constructor(private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.context = this.canvas.nativeElement.getContext('2d');
@@ -89,9 +99,9 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   startNewGame() {
-    this.arena = this.createMatrix(this.columns, this.rows);
+    this.arena = this.createMatrix(this._columns.value, this._rows.value);
     this.player.score = 0;
-    this.dropInterval = 800;
+    this.dropInterval = 960;
     this.nextPieceType = this.randomPieceType();
     this.playerReset();
     this.isRunning = true;
@@ -127,6 +137,47 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
       this.playerRotate(1);
     }
   }
+
+  handleTap(event) {
+    this.playerDrop();
+  }
+
+  handlePanEnd(event) {
+    switch (event.additionalEvent) {
+
+      case 'panright':
+        this.playerMove(1);
+        break;
+
+      case 'panleft':
+        this.playerMove(-1);
+        break;
+
+      case 'panup':
+        this.playerRotate(-1);
+        break;
+
+      default: break;
+    }
+  }
+
+  // handleSwipe(event) {
+  //   if (event.direction === 4) {
+  //     this.playerRotate(-1);
+  //   } else if (event.direction === 2) {
+  //     this.playerRotate(1);
+  //   }
+  // }
+
+  // handleTap(event) {
+  //   console.log(event);
+  //   const isTapLeft = event.center.x < this.canvas.nativeElement.width / 2;
+  //   if (isTapLeft) {
+  //     this.playerMove(-1);
+  //   } else {
+  //     this.playerMove(1);
+  //   }
+  // }
 
   handleGameCancelled() {
     this.gameCancelled.emit(this.player.score);

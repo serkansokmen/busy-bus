@@ -1,24 +1,33 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxsModule } from '@ngxs/store';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatIconModule, MatDialogModule, MatInputModule, MatFormFieldModule } from '@angular/material';
 import { ShareModule } from '@ngx-share/core';
+import { AppRoutingModule, ROUTING_COMPONENTS, COMPONENTS, ENTRY_COMPONENTS } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { TetrisComponent } from './tetris/tetris.component';
-import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
 import { ScoreBoardService } from './services';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
-import { ScoreBoardComponent } from './score-board/score-board.component';
+import { LayoutState } from './state/layout.state';
+import { PiecesState } from './state/pieces.state';
+import { StartPageComponent } from './pages/start-page/start-page.component';
+import { GamePageComponent } from './pages/game-page/game-page.component';
 
 @NgModule({
   imports: [
     BrowserModule,
+    AppRoutingModule,
     BrowserAnimationsModule,
+    NgxsModule.forRoot([
+      LayoutState,
+      PiecesState,
+    ]),
+    NgxsLoggerPluginModule.forRoot({}),
     HttpClientModule,
     ReactiveFormsModule,
     MatButtonModule,
@@ -32,16 +41,14 @@ import { ScoreBoardComponent } from './score-board/score-board.component';
   ],
   declarations: [
     AppComponent,
-    WelcomeComponent,
-    TetrisComponent,
-    GameOverDialogComponent,
-    ScoreBoardComponent,
+    ...ROUTING_COMPONENTS,
+    ...COMPONENTS,
   ],
   providers: [
     ScoreBoardService,
   ],
   entryComponents: [
-    GameOverDialogComponent,
+    ...ENTRY_COMPONENTS,
   ],
   bootstrap: [AppComponent]
 })

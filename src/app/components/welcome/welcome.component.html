@@ -1,0 +1,38 @@
+<div class="container">
+  <h1><span class="visually-hidden">34 AS</span></h1>
+  <p>
+    34 AS is the Metrobus line that people living in Istanbul use daily to start and finish their office days between two sides of the city.
+    <br>
+    It's hard to fit in and to keep yourself in morph.
+    <br>
+    <br>
+    GOOD LUCK!
+  </p>
+  <div *ngIf="isDeviceHandset" class="controls mobile-controls">
+    <ng-container *ngTemplateOutlet="handsetTpl"></ng-container>
+  </div>
+  <div *ngIf="!isDeviceHandset" class="controls desktop-controls">
+    <ng-container *ngTemplateOutlet="desktopTpl"></ng-container>
+  </div>
+  <button mat-button (click)="startGame.emit($event)" aria-label="Start"></button>
+</div>
+
+<ng-template #handsetTpl>
+  <ul class="visually-hidden">
+    <li><strong>Q</strong> Rotate Piece Left</li>
+    <li><strong>W</strong> Rotate Piece Right</li>
+    <li><strong>&larr;</strong> Move Piece Left</li>
+    <li><strong>&rarr;</strong> Move Piece Right</li>
+    <li><strong>&darr;</strong> Drop Piece</li>
+  </ul>
+</ng-template>
+
+<ng-template #desktopTpl>
+  <ul class="visually-hidden">
+    <li><strong>Q</strong> Rotate Piece Left</li>
+    <li><strong>W</strong> Rotate Piece Right</li>
+    <li><strong>&larr;</strong> Move Piece Left</li>
+    <li><strong>&rarr;</strong> Move Piece Right</li>
+    <li><strong>&darr;</strong> Drop Piece</li>
+  </ul>
+</ng-template>

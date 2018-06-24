@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ScoreBoardService } from '../services';
+import { ScoreBoardService } from '../../services/score-board.service';
 
 @Component({
   selector: 'app-game-over-dialog',
