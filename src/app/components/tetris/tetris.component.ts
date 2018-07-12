@@ -412,6 +412,17 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private random(min, max) { return (min + (Math.random() * (max - min))); }
 
+  /**
+   * This function takes a canvas, context, width and height. It scales both the
+   * canvas and the context in such a way that everything you draw will be as
+   * sharp as possible for the device.
+   *
+   * It doesn't return anything, it just modifies whatever canvas and context you
+   * pass in.
+   *
+   * Adapted from Paul Lewis's code here:
+   * http://www.html5rocks.com/en/tutorials/canvas/hidpi/
+   */
   private scaleCanvasForRetina(canvas, context, width, height) {
     // assume the device pixel ratio is 1 if the browser doesn't specify it
     const devicePixelRatio = window.devicePixelRatio || 1;
