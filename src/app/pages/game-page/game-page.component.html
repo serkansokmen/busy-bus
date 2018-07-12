@@ -1,0 +1,9 @@
+<app-tetris
+  *ngIf="(images$ | async) && isGameMounted"
+  [columns]="(isHandset$ | async) ? 12 : 12 || 8"
+  [rows]="(isHandset$ | async) ? 22 : 22 || 15"
+  [brickSize]="(isHandset$ | async) ? 24 : 24 || 36"
+  [images]="images$ | async"
+  [isDeviceHandset]="isHandset$ | async"
+  (onGameFinished)="handleGameFinished($event)"
+  (onGameCancelled)="handleGameCancelled($event)"></app-tetris>

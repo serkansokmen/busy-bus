@@ -1,10 +1,15 @@
-<button class="close-button" mat-mini-fab color="accent" (click)="dialogRef.close()">
+<button class="close-button" mat-mini-fab color="accent" (click)="onCancel($event)">
   <mat-icon fontSet="fa" fontIcon="fa-close"></mat-icon>
 </button>
 <img class="trophy" [src]="'assets/img/' + trophyImage + '@2x.png'" alt="Trophy"/>
 <h1>Game Over!</h1>
 <p>{{ message }}</p>
 
+<form class="score-form" [formGroup]="scoreForm" (ngSubmit)="onSubmitScore($event)" novalidate>
+  <mat-form-field>
+    <input matInput formControlName="name" placeholder="Enter name" maxlength="6" required="true" />
+  </mat-form-field>
+</form>
 
 <div class="share-container">
   <button mat-mini-fab shareButton="twitter" [style.backgroundColor]="'#1da1f2'">
@@ -16,6 +21,7 @@
   </button>
 </div>
 
+
 <div class="controls">
-  <button mat-button (click)="dialogRef.close(true)" aria-label="Play Again">Play Again</button>
+  <button mat-button (click)="onPlayAgain($event)" aria-label="Play Again">Play Again</button>
 </div>

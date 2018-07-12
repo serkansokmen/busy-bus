@@ -9,31 +9,11 @@ import {
   Output,
   EventEmitter,
   HostListener,
+  HostBinding,
   ChangeDetectionStrategy,
   ChangeDetectorRef } from '@angular/core';
-
-/** Utility function to create a K:V from a list of strings */
-function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
-  return o.reduce((res, key) => {
-    res[key] = key;
-    return res;
-  }, Object.create(null));
-}
-
-/** Create a K:V */
-export const PieceType = strEnum([
-  'lineF',
-  'lineM',
-  'leftHook',
-  'rightHook',
-  'square',
-  'rightZag',
-  'leftZag',
-  'arrow'
-]);
-
-/** Create a Type */
-type PieceType = keyof typeof PieceType;
+import { Observable, BehaviorSubject } from 'rxjs';
+import { PieceType } from '../../services/piece.service';
 
 @Component({
   selector: 'app-tetris',
@@ -43,15 +23,32 @@ type PieceType = keyof typeof PieceType;
 })
 export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input('columns') columns: number = 16;
-  @Input('rows') rows: number = 32;
-  @Input('brickSize') brickSize: number = 20;
-  @Input('imageLoader') images: any = {};
+  private _columns = new BehaviorSubject<number>(1);
+  @Input('columns')
+  set columns(value) { this._columns.next(value); }
+  get columns() { return this._columns.value; }
+
+  private _rows = new BehaviorSubject<number>(3);
+  @Input('rows')
+  set rows(value) { this._rows.next(value); }
+  get rows() { return this._rows.value; }
+
+  private _brickSize = new BehaviorSubject<number>(10);
+  @Input('brickSize')
+  set brickSize(value) { this._brickSize.next(value); }
+  get brickSize() { return this._brickSize.value; }
+
+  @Input('images') images: any = {};
 
   @ViewChild('game') canvas: ElementRef;
 
   @Output('onGameFinished') gameFinishedWithScore = new EventEmitter<number>();
   @Output('onGameCancelled') gameCancelled = new EventEmitter<number>();
+
+  @HostBinding('class.handset') hasDeviceHandsetClass: boolean;
+  @Input()
+  set isDeviceHandset(value) { this.hasDeviceHandsetClass = value }
+  get isDeviceHandset() { return this.hasDeviceHandsetClass }
 
   private animationFrameRequestId?: any;
   public isRunning = false;
@@ -59,14 +56,14 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // probabilities
   public pieces: PieceType[] = [
-    PieceType.lineF, PieceType.lineF, PieceType.lineF, PieceType.lineF,
-    PieceType.lineM, PieceType.lineM, PieceType.lineM, PieceType.lineM,
-    PieceType.leftHook, PieceType.leftHook, PieceType.leftHook, PieceType.leftHook,
-    PieceType.rightHook, PieceType.rightHook, PieceType.rightHook, PieceType.rightHook,
-    PieceType.square, PieceType.square, PieceType.square, PieceType.square,
-    PieceType.rightZag, PieceType.rightZag, PieceType.rightZag, PieceType.rightZag,
-    PieceType.leftZag, PieceType.leftZag, PieceType.leftZag, PieceType.leftZag,
-    PieceType.arrow, PieceType.arrow, PieceType.arrow, PieceType.arrow,
+    'lineF', 'lineF', 'lineF', 'lineF',
+    'lineM', 'lineM', 'lineM', 'lineM',
+    'leftHook', 'leftHook', 'leftHook', 'leftHook',
+    'rightHook', 'rightHook', 'rightHook', 'rightHook',
+    'square', 'square', 'square', 'square',
+    'rightZag', 'rightZag', 'rightZag', 'rightZag',
+    'leftZag', 'leftZag', 'leftZag', 'leftZag',
+    'arrow', 'arrow', 'arrow', 'arrow',
   ];
   private context: CanvasRenderingContext2D;
   private dropCounter = 0;
@@ -90,10 +87,11 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
     this.context.mozImageSmoothingEnabled = true;
     this.context.webkitImageSmoothingEnabled = true;
     this.context.mozImageSmoothingEnabled = true;
-    this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
   }
 
   ngAfterViewInit() {
+    this.clearCanvas();
+    this.scaleCanvasForRetina(this.canvas.nativeElement, this.context, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.startNewGame();
   }
 
@@ -101,10 +99,14 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
     cancelAnimationFrame(this.animationFrameRequestId);
   }
 
+  private clearCanvas() {
+    this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  }
+
   startNewGame() {
-    this.arena = this.createMatrix(this.columns, this.rows);
+    this.arena = this.createMatrix(this._columns.value, this._rows.value);
     this.player.score = 0;
-    this.dropInterval = 800;
+    this.dropInterval = 960;
     this.nextPieceType = this.randomPieceType();
     this.playerReset();
     this.isRunning = true;
@@ -140,6 +142,47 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
       this.playerRotate(1);
     }
   }
+
+  handleTap(event) {
+    this.playerDrop();
+  }
+
+  handlePanEnd(event) {
+    switch (event.additionalEvent) {
+
+      case 'panright':
+        this.playerMove(1);
+        break;
+
+      case 'panleft':
+        this.playerMove(-1);
+        break;
+
+      case 'panup':
+        this.playerRotate(-1);
+        break;
+
+      default: break;
+    }
+  }
+
+  // handleSwipe(event) {
+  //   if (event.direction === 4) {
+  //     this.playerRotate(-1);
+  //   } else if (event.direction === 2) {
+  //     this.playerRotate(1);
+  //   }
+  // }
+
+  // handleTap(event) {
+  //   console.log(event);
+  //   const isTapLeft = event.center.x < this.canvas.nativeElement.width / 2;
+  //   if (isTapLeft) {
+  //     this.playerMove(-1);
+  //   } else {
+  //     this.playerMove(1);
+  //   }
+  // }
 
   handleGameCancelled() {
     this.gameCancelled.emit(this.player.score);
@@ -191,7 +234,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getBlock(type: PieceType) {
-    if (type === PieceType.lineF) {
+    if (type === 'lineF') {
       return [
         [0, ['lineF-p1', 0], 0, 0],
         [0, ['lineF-p2', 0], 0, 0],
@@ -199,43 +242,43 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
         [0, ['lineF-p4', 0], 0, 0],
       ];
     }
-    else if (type === PieceType.lineM) {
+    else if (type === 'lineM') {
       return [
         [0, ['lineM-p1', 0], 0, 0],
         [0, ['lineM-p2', 0], 0, 0],
         [0, ['lineM-p3', 0], 0, 0],
         [0, ['lineM-p4', 0], 0, 0],
       ];
-    } else if (type === PieceType.rightHook) {
+    } else if (type === 'rightHook') {
       return [
         [0, ['rightHook-p1', 0], 0],
         [0, ['rightHook-p2', 0], 0],
         [0, ['rightHook-p3', 0], ['rightHook-p4', 0]],
       ];
-    } else if (type === PieceType.leftHook) {
+    } else if (type === 'leftHook') {
       return [
         [0,                  ['leftHook-p4', 0], 0],
         [0,                  ['leftHook-p3', 0], 0],
         [['leftHook-p1', 0], ['leftHook-p2', 0], 0],
       ];
-    } else if (type === PieceType.square) {
+    } else if (type === 'square') {
       return [
         [['square-p1', 0], ['square-p2', 0]],
         [['square-p3', 0], ['square-p4', 0]],
       ];
-    } else if (type === PieceType.leftZag) {
+    } else if (type === 'leftZag') {
       return [
         [0,                 ['leftZag-p1', 0], 0],
         [['leftZag-p3', 0], ['leftZag-p2', 0], 0],
         [['leftZag-p4', 0], 0,                 0],
       ];
-    } else if (type === PieceType.rightZag) {
+    } else if (type === 'rightZag') {
       return [
         [0, ['rightZag-p1', 0], 0],
         [0, ['rightZag-p2', 0], ['rightZag-p3', 0]],
         [0, 0,                  ['rightZag-p4', 0]],
       ];
-    } else if (type === PieceType.arrow) {
+    } else if (type === 'arrow') {
       return [
         [0,               ['arrow-p1', 0], 0],
         [['arrow-p2', 0], ['arrow-p3', 0], ['arrow-p4', 0]],
@@ -265,7 +308,7 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private draw() {
-    this.context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.clearCanvas();
 
     this.drawMatrix(this.context, this.arena, {x: 0, y: 0});
     this.drawMatrix(this.context, this.player.matrix, this.player.pos);
@@ -368,4 +411,41 @@ export class TetrisComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private random(min, max) { return (min + (Math.random() * (max - min))); }
+
+  private scaleCanvasForRetina(canvas, context, width, height) {
+    // assume the device pixel ratio is 1 if the browser doesn't specify it
+    const devicePixelRatio = window.devicePixelRatio || 1;
+
+    // determine the 'backing store ratio' of the canvas context
+    const backingStoreRatio = (
+      context.webkitBackingStorePixelRatio ||
+      context.mozBackingStorePixelRatio ||
+      context.msBackingStorePixelRatio ||
+      context.oBackingStorePixelRatio ||
+      context.backingStorePixelRatio || 1
+    );
+
+    // determine the actual ratio we want to draw at
+    const ratio = devicePixelRatio / backingStoreRatio;
+
+    if (devicePixelRatio !== backingStoreRatio) {
+      // set the 'real' canvas size to the higher width/height
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+
+      // ...then scale it back down with CSS
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+    }
+    else {
+      // this is a normal 1:1 device; just scale it simply
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.width = '';
+      canvas.style.height = '';
+    }
+
+    // scale the drawing context so everything will work at the higher ratio
+    context.scale(ratio, ratio);
+  }
 }

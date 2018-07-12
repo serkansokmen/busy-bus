@@ -1,12 +1,3 @@
-<app-welcome
-  [style.display]="isGameMounted ? 'none' : 'flex'"
-  (onStartGame)="isGameMounted = true"></app-welcome>
-
-<app-tetris
-  *ngIf="isGameMounted"
-  [columns]="8"
-  [rows]="15"
-  [brickSize]="36"
-  [imageLoader]="images"
-  (onGameFinished)="handleGameOverDialog($event)"
-  (onGameCancelled)="handleGameCancelled($event)"></app-tetris>
+<router-outlet></router-outlet>
+<!-- <app-score-board *ngIf="isScoreboardVisible"
+  [scores]="scores$ | async"></app-score-board> -->
