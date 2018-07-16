@@ -1,11 +1,13 @@
-<button class="close-button" mat-mini-fab color="accent" (click)="onCancel($event)">
+<button class="close-button" mat-mini-fab disableRipple color="accent" (click)="onCancel($event)">
   <mat-icon fontSet="fa" fontIcon="fa-close"></mat-icon>
 </button>
+
 <img class="trophy" [src]="'assets/img/' + trophyImage + '@2x.png'" alt="Trophy"/>
+
 <h1>Game Over!</h1>
 <p>{{ message }}</p>
 
-<form class="score-form" [formGroup]="scoreForm" (ngSubmit)="onSubmitScore($event)" novalidate>
+<form class="score-form" [formGroup]="scoreForm" (ngSubmit)="onSubmitScore($event)" novalidate [hidden]="score === 0">
   <mat-form-field>
     <input matInput formControlName="name" placeholder="Enter name" maxlength="6" required="true" />
   </mat-form-field>
@@ -23,5 +25,6 @@
 
 
 <div class="controls">
-  <button mat-button (click)="onPlayAgain($event)" aria-label="Play Again">Play Again</button>
+  <button mat-button disableRipple color="primary" (click)="onPlayAgain($event)" aria-label="Play Again">Play Again</button>
+  <button mat-button disableRipple color="accent" (click)="onCancel($event)" aria-label="Close">Close</button>
 </div>
